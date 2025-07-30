@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { db } from "@/utils/pockatbase";
 
 interface FormData {
   email: string;
@@ -96,7 +97,9 @@ export const LoginPage: React.FC = () => {
     setErrors({});
 
     try {
-      await signInWithEmailAndPassword(auth, formData.email, formData.password);
+      await db
+        .collection("users")
+        .authWithPassword(formData.email, formData.password);
       setSuccess(true);
       setTimeout(() => {
         navigate("/dashboard");
