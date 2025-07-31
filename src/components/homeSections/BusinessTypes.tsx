@@ -122,7 +122,7 @@ export const BusinessTypes = () => {
                 duration: 0.7,
                 delay: index * 0.15,
                 type: "spring",
-                stiffness: 10,
+                stiffness: 120,
               }}
               viewport={{ once: true }}
               className="group relative"
