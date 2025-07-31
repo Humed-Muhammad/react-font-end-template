@@ -1,0 +1,51 @@
+export const ORDER_STATUSES = {
+  PENDING: {
+    id: "pending",
+    label: "Order Received",
+    description: "Your order has been received and is being reviewed",
+    color: "bg-yellow-500",
+    icon: "Clock",
+  },
+  CONFIRMED: {
+    id: "confirmed",
+    label: "Order Confirmed",
+    description: "Your order has been confirmed and is being prepared",
+    color: "bg-blue-500",
+    icon: "CheckCircle",
+  },
+  PREPARING: {
+    id: "preparing",
+    label: "Preparing",
+    description: "Your order is currently being prepared",
+    color: "bg-orange-500",
+    icon: "ChefHat",
+  },
+  READY: {
+    id: "ready",
+    label: "Ready for Pickup/Delivery",
+    description: "Your order is ready and will be dispatched soon",
+    color: "bg-purple-500",
+    icon: "Package",
+  },
+  OUT_FOR_DELIVERY: {
+    id: "out_for_delivery",
+    label: "Out for Delivery",
+    description: "Your order is on its way to you",
+    color: "bg-indigo-500",
+    icon: "Truck",
+  },
+  DELIVERED: {
+    id: "delivered",
+    label: "Delivered",
+    description: "Your order has been successfully delivered",
+    color: "bg-green-500",
+    icon: "CheckCircle2",
+  },
+  CANCELLED: {
+    id: "cancelled",
+    label: "Cancelled",
+    description: "This order has been cancelled",
+    color: "bg-red-500",
+    icon: "XCircle",
+  },
+};

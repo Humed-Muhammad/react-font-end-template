@@ -1,8 +1,6 @@
-// File: /home/humed/Desktop/humed/autofacless-client/src/pages/LoginPage.tsx
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
   sendPasswordResetEmail,
@@ -17,7 +15,6 @@ import {
   Chrome,
   AlertCircle,
   CheckCircle,
-  ArrowLeft,
   Sparkles,
   Shield,
   Zap,
