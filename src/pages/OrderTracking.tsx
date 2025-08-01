@@ -14,8 +14,8 @@ import {
   Phone,
   MessageCircle,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import type { Order, OrderStatus } from "@/types";
+import { motion } from "framer-motion";
+import type { Order } from "@/types";
 import { ORDER_STATUSES } from "@/constant";
 
 interface OrderTrackingProps {

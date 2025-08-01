@@ -40,3 +40,28 @@ export interface FormErrors {
   confirmPassword?: string;
   general?: string;
 }
+
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  userType: UserType;
+  avatar?: string;
+  permissions?: string[];
+  businessId?: string;
+}
+
+export type UserType =
+  | "service_owner"
+  | "product_owner"
+  | "customer"
+  | "inventory_manager"
+  | "cashier"
+  | "delivery_person"
+  | "admin";
+
+export interface AuthState {
+  user: User | null;
+  loading: boolean;
+  isAuthenticated: boolean;
+}
