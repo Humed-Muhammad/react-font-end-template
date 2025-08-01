@@ -1,12 +1,8 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  createUserWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-  updateProfile,
-} from "firebase/auth";
-import { auth } from "@/utils/firebase";
+import { db } from "@/utils/pockatbase";
 import { useNavigate, Link } from "react-router-dom";
 import {
   Eye,
@@ -29,6 +25,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { usePbAuth } from "@/hooks/usePbAuth";
 
 interface FormData {
   firstName: string;
@@ -55,11 +52,17 @@ export const SignupPage: React.FC = () => {
     password: "",
     confirmPassword: "",
   });
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [loading, setLoading] = useState(false);
+  const {
+    handleGoogleAuth,
+    errors,
+    loading,
+    success,
+    setErrors,
+    setLoading,
+    setSuccess,
+  } = usePbAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
   const validateForm = (): boolean => {
@@ -81,8 +84,8 @@ export const SignupPage: React.FC = () => {
 
     if (!formData.password) {
       newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters";
     } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
       newErrors.password =
         "Password must contain uppercase, lowercase, and number";
@@ -117,56 +120,43 @@ export const SignupPage: React.FC = () => {
     setErrors({});
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        formData.email,
-        formData.password
-      );
+      // Create user with PocketBase
+      const userData = {
+        email: formData.email,
+        password: formData.password,
+        passwordConfirm: formData.confirmPassword,
+        name: `${formData.firstName} ${formData.lastName}`,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+      };
 
-      await updateProfile(userCredential.user, {
-        displayName: `${formData.firstName} ${formData.lastName}`,
-      });
+      await db.collection("users").create(userData);
+
+      // Send verification email
+      await db.collection("users").requestVerification(formData.email);
 
       setSuccess(true);
       setTimeout(() => {
-        navigate("/");
+        navigate("/login");
       }, 2000);
     } catch (error: any) {
       let errorMessage = "An error occurred during signup";
 
-      switch (error.code) {
-        case "auth/email-already-in-use":
+      // Handle PocketBase specific errors
+      if (error.data?.data) {
+        const errorData = error.data.data;
+        if (errorData.email) {
           errorMessage = "This email is already registered";
-          break;
-        case "auth/weak-password":
+        } else if (errorData.password) {
           errorMessage = "Password is too weak";
-          break;
-        case "auth/invalid-email":
-          errorMessage = "Invalid email address";
-          break;
-        default:
-          errorMessage = error.message;
+        } else if (errorData.passwordConfirm) {
+          errorMessage = "Passwords do not match";
+        }
+      } else if (error.message) {
+        errorMessage = error.message;
       }
 
       setErrors({ general: errorMessage });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGoogleSignup = async () => {
-    setLoading(true);
-    setErrors({});
-
-    try {
-      const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-      setSuccess(true);
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
-    } catch (error: any) {
-      setErrors({ general: "Google signup failed. Please try again." });
     } finally {
       setLoading(false);
     }
@@ -206,6 +196,7 @@ export const SignupPage: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-blue-900 dark:to-indigo-900">
         <motion.div
+          // @ts-ignore
           variants={successVariants}
           initial="hidden"
           animate="visible"
@@ -222,7 +213,7 @@ export const SignupPage: React.FC = () => {
             Account Created Successfully!
           </h2>
           <p className="text-gray-600 dark:text-gray-300">
-            Redirecting you to the dashboard...
+            Please check your email to verify your account, then sign in.
           </p>
         </motion.div>
       </div>
@@ -271,7 +262,7 @@ export const SignupPage: React.FC = () => {
                 type="button"
                 variant="outline"
                 className="w-full h-12 border-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200"
-                onClick={handleGoogleSignup}
+                onClick={handleGoogleAuth}
                 disabled={loading}
               >
                 <Chrome className="w-5 h-5 mr-2" />
@@ -308,13 +299,22 @@ export const SignupPage: React.FC = () => {
                       value={formData.firstName}
                       onChange={handleInputChange}
                       className={`pl-10 h-12 ${
-                        errors.firstName ? "border-red-500" : ""
-                      }`}
+                        errors.firstName
+                          ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                          : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                      } transition-colors duration-200`}
                       placeholder="John"
+                      required
                     />
                   </div>
                   {errors.firstName && (
-                    <p className="text-red-500 text-xs">{errors.firstName}</p>
+                    <motion.p
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-red-500 text-xs mt-1"
+                    >
+                      {errors.firstName}
+                    </motion.p>
                   )}
                 </div>
 
@@ -331,13 +331,22 @@ export const SignupPage: React.FC = () => {
                       value={formData.lastName}
                       onChange={handleInputChange}
                       className={`pl-10 h-12 ${
-                        errors.lastName ? "border-red-500" : ""
-                      }`}
+                        errors.lastName
+                          ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                          : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                      } transition-colors duration-200`}
                       placeholder="Doe"
+                      required
                     />
                   </div>
                   {errors.lastName && (
-                    <p className="text-red-500 text-xs">{errors.lastName}</p>
+                    <motion.p
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-red-500 text-xs mt-1"
+                    >
+                      {errors.lastName}
+                    </motion.p>
                   )}
                 </div>
               </motion.div>
@@ -355,13 +364,22 @@ export const SignupPage: React.FC = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     className={`pl-10 h-12 ${
-                      errors.email ? "border-red-500" : ""
-                    }`}
+                      errors.email
+                        ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                        : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                    } transition-colors duration-200`}
                     placeholder="john@example.com"
+                    required
                   />
                 </div>
                 {errors.email && (
-                  <p className="text-red-500 text-xs">{errors.email}</p>
+                  <motion.p
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-red-500 text-xs mt-1"
+                  >
+                    {errors.email}
+                  </motion.p>
                 )}
               </motion.div>
 
@@ -378,14 +396,17 @@ export const SignupPage: React.FC = () => {
                     value={formData.password}
                     onChange={handleInputChange}
                     className={`pl-10 pr-10 h-12 ${
-                      errors.password ? "border-red-500" : ""
-                    }`}
+                      errors.password
+                        ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                        : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                    } transition-colors duration-200`}
                     placeholder="••••••••"
+                    required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                   >
                     {showPassword ? (
                       <EyeOff className="w-4 h-4" />
@@ -395,7 +416,13 @@ export const SignupPage: React.FC = () => {
                   </button>
                 </div>
                 {errors.password && (
-                  <p className="text-red-500 text-xs">{errors.password}</p>
+                  <motion.p
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-red-500 text-xs mt-1"
+                  >
+                    {errors.password}
+                  </motion.p>
                 )}
               </motion.div>
 
@@ -415,14 +442,17 @@ export const SignupPage: React.FC = () => {
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
                     className={`pl-10 pr-10 h-12 ${
-                      errors.confirmPassword ? "border-red-500" : ""
-                    }`}
+                      errors.confirmPassword
+                        ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                        : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                    } transition-colors duration-200`}
                     placeholder="••••••••"
+                    required
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                   >
                     {showConfirmPassword ? (
                       <EyeOff className="w-4 h-4" />
@@ -432,28 +462,27 @@ export const SignupPage: React.FC = () => {
                   </button>
                 </div>
                 {errors.confirmPassword && (
-                  <p className="text-red-500 text-xs">
+                  <motion.p
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-red-500 text-xs mt-1"
+                  >
                     {errors.confirmPassword}
-                  </p>
+                  </motion.p>
                 )}
               </motion.div>
 
-              <motion.div variants={itemVariants} className="pt-4">
+              <motion.div variants={itemVariants}>
                 <Button
                   type="submit"
-                  className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]"
+                  className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium transition-all duration-200 transform hover:scale-[1.02]"
                   disabled={loading}
                 >
                   {loading ? (
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{
-                        duration: 1,
-                        repeat: Infinity,
-                        ease: "linear",
-                      }}
-                      className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
-                    />
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>Creating Account...</span>
+                    </div>
                   ) : (
                     "Create Account"
                   )}
@@ -469,18 +498,6 @@ export const SignupPage: React.FC = () => {
                   className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
                 >
                   Sign in
-                </Link>
-              </p>
-            </motion.div>
-
-            <motion.div variants={itemVariants} className="text-center">
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                By creating an account, you agree to our{" "}
-                <Link
-                  to="/legal"
-                  className="underline hover:text-gray-700 dark:hover:text-gray-300"
-                >
-                  Terms of Service & Privacy Policy
                 </Link>
               </p>
             </motion.div>

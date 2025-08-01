@@ -35,13 +35,12 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@/utils/firebase";
-import { signOut } from "firebase/auth";
 import { features, resources, solutions } from "@/constant/navConstant";
+import { db } from "@/utils/pockatbase";
 
 export const Navbar: React.FC = () => {
-  const [user, loading] = useAuthState(auth);
+  // const [user, loading] = useAuthState(auth);
+  const user = db.authStore.record;
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -57,8 +56,8 @@ export const Navbar: React.FC = () => {
 
   const handleSignOut = async () => {
     try {
-      await signOut(auth);
-      navigate("/");
+      db.authStore.clear();
+      navigate("/login");
     } catch (error) {
       console.error("Error signing out:", error);
     }
@@ -377,9 +376,7 @@ export const Navbar: React.FC = () => {
 
           {/* Right side - Auth buttons or user menu */}
           <div className="flex items-center space-x-4">
-            {loading ? (
-              <div className="w-8 h-8 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse" />
-            ) : user ? (
+            {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -392,7 +389,7 @@ export const Navbar: React.FC = () => {
                         alt={user.displayName || ""}
                       />
                       <AvatarFallback className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white">
-                        {getUserInitials(user.displayName)}
+                        {getUserInitials(user.name)}
                       </AvatarFallback>
                     </Avatar>
                   </Button>

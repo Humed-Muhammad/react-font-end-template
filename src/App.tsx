@@ -10,6 +10,7 @@ import { LoginPage } from "./pages/Login";
 import { LoadingCircle } from "./components/icons";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { OrderTracking } from "./pages/OrderTracking";
+import Dashboard from "./pages/Dashboard";
 const App: React.FC = () => {
   const [user, setUser] = React.useState<User | null>(null);
   const [loading, setLoading] = React.useState(true);
@@ -59,6 +60,8 @@ const App: React.FC = () => {
             path="/order-tracking"
             element={<OrderTracking orderId="1" />}
           />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
     </>
