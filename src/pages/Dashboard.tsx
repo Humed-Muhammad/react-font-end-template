@@ -38,6 +38,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { NotificationCenter } from "./NotificationCenter";
 import { useDisclosure } from "@/hooks/useDisclosure";
+import { db } from "@/utils/pockatbase";
+import { useNavigate } from "react-router-dom";
 
 interface Order {
   id: string;
@@ -76,6 +78,7 @@ export const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const notificationController = useDisclosure();
   const [notifications, setNotifications] = useState([]);
+  const navigate = useNavigate();
 
   // Mock data
   const [analytics] = useState<Analytics>({
@@ -262,7 +265,14 @@ export const Dashboard: React.FC = () => {
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem>Profile</DropdownMenuItem>
                   <DropdownMenuItem>Settings</DropdownMenuItem>
-                  <DropdownMenuItem>Logout</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      db.authStore.clear();
+                      navigate("/");
+                    }}
+                  >
+                    Logout
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
