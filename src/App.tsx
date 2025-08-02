@@ -23,16 +23,17 @@ import Dashboard from "./pages/Dashboard";
 // Components
 import { LoadingCircle } from "./components/icons";
 import { PublicRoute } from "./routes/PublicRoute";
-import { ProtectedRoute } from "./routes/ProtectedRoutes";
+// import { ProtectedRoute } from "./routes/Providers";
 import { getUserTypeRedirect } from "./utils/auth";
+import { ProtectedRoute } from "./routes/ProtectedRoutes";
 
 const App: React.FC = () => {
-  const { user, loading } = useAuth();
+  const { user, isFetchingUser } = useAuth();
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 300], [0, -50]);
   const y2 = useTransform(scrollY, [0, 300], [0, -100]);
 
-  if (loading) {
+  if (isFetchingUser && !user) {
     return (
       <div className="flex justify-center items-center h-screen">
         {/* Animated Background Elements */}

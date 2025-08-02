@@ -147,11 +147,6 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
     visible: {
       opacity: 1,
       x: 0,
-      transition: {
-        type: "spring",
-        // stiffness: 300,
-        damping: 20,
-      },
     },
     exit: {
       opacity: 0,

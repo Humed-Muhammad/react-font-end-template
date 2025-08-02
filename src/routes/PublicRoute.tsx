@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
 import { getUserTypeRedirect } from "@/utils/auth";
+import { useAuthSlice } from "@/pages/Auth/slice";
 
 interface PublicRouteProps {
   children: React.ReactNode;
@@ -12,12 +12,11 @@ export const PublicRoute: React.FC<PublicRouteProps> = ({
   children,
   redirectIfAuthenticated = true,
 }) => {
-  const { user, isAuthenticated } = useAuth();
-  console.log(user, isAuthenticated, redirectIfAuthenticated);
-  if (redirectIfAuthenticated && isAuthenticated && user) {
-    const redirectPath = getUserTypeRedirect(user.userType);
-    return <Navigate to={redirectPath} replace />;
-  }
+  const { user, isFetchingUser } = useAuthSlice();
+  // if (redirectIfAuthenticated && !isFetchingUser && user) {
+  //   const redirectPath = getUserTypeRedirect(user.userType);
+  //   return <Navigate to={redirectPath} replace />;
+  // }
 
   return <>{children}</>;
 };

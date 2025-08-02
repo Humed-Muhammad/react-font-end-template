@@ -216,7 +216,7 @@ export const Dashboard: React.FC = () => {
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                    className={`cursor-pointer px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
                       activeTab === tab
                         ? "bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400"
                         : "text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
@@ -717,7 +717,7 @@ export const Dashboard: React.FC = () => {
                       key={action.label}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className={`p-4 rounded-xl bg-gradient-to-r ${action.color} text-white font-medium shadow-lg hover:shadow-xl transition-all duration-200`}
+                      className={`cursor-pointer p-4 rounded-xl bg-gradient-to-r ${action.color} text-white font-medium shadow-lg hover:shadow-xl transition-all duration-200`}
                     >
                       <action.icon className="w-6 h-6 mx-auto mb-2" />
                       <span className="text-sm">{action.label}</span>

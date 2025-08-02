@@ -1,7 +1,6 @@
 import type { UserType } from "@/types";
 
 export const getUserTypeRedirect = (userType: string): string => {
-  console.log("=======>", userType);
   switch (userType) {
     case "customer":
       return "/customer/orders";

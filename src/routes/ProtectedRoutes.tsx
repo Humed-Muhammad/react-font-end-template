@@ -1,9 +1,9 @@
 import React from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import type { UserType } from "@/types";
-import { useAuth } from "@/hooks/useAuth";
 import { getUserTypeRedirect } from "@/utils/auth";
 import { LoadingCircle } from "@/components/icons";
+import { useAuthSlice } from "@/pages/Auth/slice";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -14,22 +14,14 @@ interface ProtectedRouteProps {
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   allowedUserTypes = [],
-  requireAuth = true,
 }) => {
-  const { user, isAuthenticated, loading } = useAuth();
-  const location = useLocation();
-  console.log(user, isAuthenticated, allowedUserTypes);
-  if (loading && !user) {
+  const { user, isFetchingUser } = useAuthSlice();
+  if (isFetchingUser && !user) {
     return (
       <div className="flex justify-center items-center h-screen">
         <LoadingCircle />
       </div>
     );
-  }
-
-  // If authentication is required but user is not authenticated
-  if (requireAuth && !isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   // If user types are specified and user doesn't have the required type
