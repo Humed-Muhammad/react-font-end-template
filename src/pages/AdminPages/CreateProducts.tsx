@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, FieldArray } from "formik";
@@ -41,10 +42,12 @@ import {
   Palette,
   ArrowLeft,
   FileText,
+  AlertCircleIcon,
 } from "lucide-react";
 import { db } from "@/utils/pockatbase";
 import { useSelector } from "react-redux";
 import { selectUser } from "../Auth/slice/selector";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 // Product form data interface
 interface ProductFormData {
@@ -77,6 +80,7 @@ interface ProductFormData {
   seoKeywords: string[];
   createdBy?: string;
   updatedBy?: string;
+  slug?: string;
 }
 
 // Validation schema
@@ -123,7 +127,10 @@ const productValidationSchema = Yup.object({
 export const CreateProductPage: React.FC = () => {
   const navigate = useNavigate();
   const user = useSelector(selectUser);
+  const [error, setError] = useState<any>();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [activeTab, setActiveTab] = useState("basic");
@@ -161,6 +168,7 @@ export const CreateProductPage: React.FC = () => {
 
   const handleSubmit = async (values: ProductFormData) => {
     setLoading(true);
+    setError(null);
     try {
       // Transform data for PocketBase
       const productData = {
@@ -177,6 +185,7 @@ export const CreateProductPage: React.FC = () => {
         navigate("/products");
       }, 2000);
     } catch (error) {
+      setError(error);
       console.error("Error creating product:", error);
     } finally {
       setLoading(false);
@@ -271,6 +280,16 @@ export const CreateProductPage: React.FC = () => {
           </div>
         </motion.div>
 
+        <div className="mb-5">
+          {error && (
+            <Alert variant="destructive">
+              <AlertCircleIcon />
+              <AlertTitle>Unable to create product.</AlertTitle>
+              <AlertDescription>{error?.message}</AlertDescription>
+            </Alert>
+          )}
+        </div>
+
         <Formik
           initialValues={initialValues}
           validationSchema={productValidationSchema}
@@ -280,7 +299,7 @@ export const CreateProductPage: React.FC = () => {
             <Form className="space-y-6">
               <motion.div variants={itemVariants}>
                 <Tabs value={activeTab} onValueChange={setActiveTab}>
-                  <TabsList className="grid w-full grid-cols-6 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
+                  <TabsList className="grid w-full grid-cols-6 bg-gray-100 border border-indigo-100 dark:bg-gray-800/50 backdrop-blur-sm">
                     <TabsTrigger
                       value="basic"
                       className="flex items-center space-x-2"
@@ -1856,6 +1875,10 @@ export const CreateProductPage: React.FC = () => {
                 >
                   <Button
                     type="submit"
+                    onClick={() => {
+                      setFieldValue("status", "active");
+                      handleSubmit(values);
+                    }}
                     disabled={isSubmitting || !isValid}
                     className="flex-1 h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium"
                   >
@@ -1884,17 +1907,6 @@ export const CreateProductPage: React.FC = () => {
                   >
                     <FileText className="w-4 h-4 mr-2" />
                     Save as Draft
-                  </Button>
-
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => navigate("/admin/products")}
-                    disabled={isSubmitting}
-                    className="flex-1 h-12"
-                  >
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    Cancel
                   </Button>
                 </motion.div>
               </motion.div>
