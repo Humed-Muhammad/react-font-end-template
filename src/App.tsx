@@ -26,6 +26,9 @@ import { PublicRoute } from "./routes/PublicRoute";
 // import { ProtectedRoute } from "./routes/Providers";
 import { getUserTypeRedirect } from "./utils/auth";
 import { ProtectedRoute } from "./routes/ProtectedRoutes";
+import { NotFoundPage } from "./pages/Notfound";
+import { CreateProductPage } from "./pages/AdminPages/CreateProducts";
+import { ProductListPage } from "./pages/AdminPages/Products";
 
 const App: React.FC = () => {
   const { user, isFetchingUser } = useAuth();
@@ -247,6 +250,26 @@ const App: React.FC = () => {
           }
         />
         <Route
+          path="/products/new"
+          element={
+            <ProtectedRoute
+              allowedUserTypes={["admin", "service_owner", "inventory_manager"]}
+            >
+              <CreateProductPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/products"
+          element={
+            <ProtectedRoute
+              allowedUserTypes={["admin", "service_owner", "inventory_manager"]}
+            >
+              <ProductListPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/admin/users"
           element={
             <ProtectedRoute allowedUserTypes={["admin", "service_owner"]}>
@@ -263,17 +286,19 @@ const App: React.FC = () => {
           }
         />
 
+        <Route element={<NotFoundPage />} path="*" />
+
         {/* Catch-all route */}
-        <Route
+        {/* <Route
           path="*"
           element={
             user ? (
               <Navigate to={getUserTypeRedirect(user.userType)} replace />
             ) : (
-              <Navigate to="/" replace />
+              <Navigate to="/notfound" replace />
             )
           }
-        />
+        /> */}
       </Routes>
     </BrowserRouter>
   );

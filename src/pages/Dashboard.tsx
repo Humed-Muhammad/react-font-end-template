@@ -40,6 +40,7 @@ import { NotificationCenter } from "./NotificationCenter";
 import { useDisclosure } from "@/hooks/useDisclosure";
 import { db } from "@/utils/pockatbase";
 import { useNavigate } from "react-router-dom";
+import { AdminDashboardNav } from "@/components/AdminDashboardNav";
 
 interface Order {
   id: string;
@@ -75,7 +76,6 @@ interface Analytics {
 export const Dashboard: React.FC = () => {
   const [selectedTimeRange, setSelectedTimeRange] = useState("today");
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState("overview");
   const notificationController = useDisclosure();
   const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
@@ -198,35 +198,7 @@ export const Dashboard: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo and Navigation */}
-            <div className="flex items-center space-x-8">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="flex items-center space-x-2"
-              >
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                  <Package className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  OrderMe
-                </span>
-              </motion.div>
-
-              <nav className="hidden md:flex space-x-6">
-                {["overview", "orders", "menu", "analytics"].map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveTab(tab)}
-                    className={`cursor-pointer px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                      activeTab === tab
-                        ? "bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400"
-                        : "text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
-                    }`}
-                  >
-                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                  </button>
-                ))}
-              </nav>
-            </div>
+            <AdminDashboardNav />
 
             {/* Search and Actions */}
             <div className="flex items-center space-x-4">
@@ -573,10 +545,10 @@ export const Dashboard: React.FC = () => {
               <Card className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-0 shadow-lg">
                 <CardHeader className="flex flex-row items-center justify-between">
                   <CardTitle className="text-lg font-semibold">
-                    Top Menu Items
+                    Top Products
                   </CardTitle>
                   <Button variant="ghost" size="sm">
-                    View Menu
+                    View Products
                   </Button>
                 </CardHeader>
                 <CardContent>
@@ -693,7 +665,7 @@ export const Dashboard: React.FC = () => {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {[
                     {
-                      label: "Add Menu Item",
+                      label: "Add Product",
                       icon: Plus,
                       color: "from-green-500 to-emerald-500",
                     },
