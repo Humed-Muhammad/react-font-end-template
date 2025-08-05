@@ -45,6 +45,8 @@ import {
   AlertCircleIcon,
   ArrowUpRight,
   Search,
+  Barcode,
+  QrCode,
 } from "lucide-react";
 import { db } from "@/utils/pockatbase";
 import { useSelector } from "react-redux";
@@ -1043,38 +1045,72 @@ export const CreateProductPage: React.FC = () => {
                                         Generate
                                       </Button>
                                       {values.barcode && (
-                                        <Tooltip>
-                                          <TooltipContent>
-                                            Preview Barcode
-                                          </TooltipContent>
+                                        <div className="flex items-center gap-2">
+                                          <Tooltip>
+                                            <TooltipContent>
+                                              Preview Barcode
+                                            </TooltipContent>
 
-                                          <TooltipTrigger>
-                                            <Button
-                                              type="button"
-                                              onClick={() => {
-                                                const params =
-                                                  new URLSearchParams({
-                                                    productId: v4(),
-                                                    barcode: values.barcode,
-                                                    productName:
-                                                      values.name ||
-                                                      "New Product",
-                                                    productPrice:
-                                                      values.price.toString(),
-                                                    sku: values.sku || "",
-                                                  });
-                                                window.open(
-                                                  `/qrcode?${params.toString()}`,
-                                                  "_blank"
-                                                );
-                                              }}
-                                              variant="outline"
-                                              size="icon"
-                                            >
-                                              <ArrowUpRight />
-                                            </Button>
-                                          </TooltipTrigger>
-                                        </Tooltip>
+                                            <TooltipTrigger>
+                                              <Button
+                                                type="button"
+                                                onClick={() => {
+                                                  const params =
+                                                    new URLSearchParams({
+                                                      productId: v4(),
+                                                      barcode: values.barcode,
+                                                      productName:
+                                                        values.name ||
+                                                        "New Product",
+                                                      productPrice:
+                                                        values.price.toString(),
+                                                      sku: values.sku || "",
+                                                    });
+                                                  window.open(
+                                                    `/barcode?${params.toString()}`,
+                                                    "_blank"
+                                                  );
+                                                }}
+                                                variant="outline"
+                                                size="icon"
+                                              >
+                                                <Barcode />
+                                              </Button>
+                                            </TooltipTrigger>
+                                          </Tooltip>
+                                          <Tooltip>
+                                            <TooltipContent>
+                                              Preview QRCode
+                                            </TooltipContent>
+
+                                            <TooltipTrigger>
+                                              <Button
+                                                type="button"
+                                                onClick={() => {
+                                                  const params =
+                                                    new URLSearchParams({
+                                                      productId: v4(),
+                                                      barcode: values.barcode,
+                                                      productName:
+                                                        values.name ||
+                                                        "New Product",
+                                                      productPrice:
+                                                        values.price.toString(),
+                                                      sku: values.sku || "",
+                                                    });
+                                                  window.open(
+                                                    `/qrcode?${params.toString()}`,
+                                                    "_blank"
+                                                  );
+                                                }}
+                                                variant="outline"
+                                                size="icon"
+                                              >
+                                                <QrCode />
+                                              </Button>
+                                            </TooltipTrigger>
+                                          </Tooltip>
+                                        </div>
                                       )}
                                     </div>
                                   </div>

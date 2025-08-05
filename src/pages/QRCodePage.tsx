@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import QRCode from "qrcode";
+
 import {
   QrCode,
   Settings,
@@ -53,7 +55,6 @@ export const QRCodePage: React.FC = () => {
 
     // Generate QR code canvas for printing
     const canvas = document.createElement("canvas");
-    const QRCode = require("qrcode");
 
     const sizeConfig = {
       small: 200,
