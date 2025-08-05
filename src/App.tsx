@@ -29,6 +29,8 @@ import { ProtectedRoute } from "./routes/ProtectedRoutes";
 import { NotFoundPage } from "./pages/Notfound";
 import { CreateProductPage } from "./pages/AdminPages/CreateProducts";
 import { ProductListPage } from "./pages/AdminPages/Products";
+import { BarcodePage } from "./pages/BarcodePage";
+import { QRCodePage } from "./pages/QRCodePage";
 
 const App: React.FC = () => {
   const { user, isFetchingUser } = useAuth();
@@ -81,6 +83,15 @@ const App: React.FC = () => {
             </PublicRoute>
           }
         />
+        <Route
+          path="/barcode"
+          element={
+            <PublicRoute>
+              <BarcodePage />
+            </PublicRoute>
+          }
+        />
+        <Route path="/qrcode" element={<QRCodePage />} />
         <Route path="/legal" element={<LegalPage />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
 

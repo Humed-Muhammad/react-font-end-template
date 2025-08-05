@@ -90,6 +90,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../Auth/slice/selector";
 import { AdminDashboardNav } from "@/components/AdminDashboardNav";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ProductsPageSkeleton } from "@/components/Skeletons/ProductsPageSkeleton";
 
 interface Product {
   id: string;
@@ -377,24 +378,7 @@ export const ProductListPage: React.FC = () => {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-900 p-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="animate-pulse space-y-6">
-            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4"></div>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              {[...Array(4)].map((_, i) => (
-                <div
-                  key={i}
-                  className="h-32 bg-gray-200 dark:bg-gray-700 rounded-lg"
-                ></div>
-              ))}
-            </div>
-            <div className="h-96 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
-          </div>
-        </div>
-      </div>
-    );
+    return <ProductsPageSkeleton />;
   }
 
   return (

@@ -43,11 +43,20 @@ import {
   ArrowLeft,
   FileText,
   AlertCircleIcon,
+  ArrowUpRight,
+  Search,
 } from "lucide-react";
 import { db } from "@/utils/pockatbase";
 import { useSelector } from "react-redux";
 import { selectUser } from "../Auth/slice/selector";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ProductImageUpload } from "@/components/ProductImageUpload";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { v4 } from "uuid";
 
 // Product form data interface
 interface ProductFormData {
@@ -135,6 +144,7 @@ export const CreateProductPage: React.FC = () => {
   const [success, setSuccess] = useState(false);
   const [activeTab, setActiveTab] = useState("basic");
   const [previewMode, setPreviewMode] = useState(false);
+  const [showBarcodePreview, setShowBarcodePreview] = useState(false);
 
   const initialValues: ProductFormData = {
     businessId: "current-business-id", // This should come from context
@@ -299,7 +309,7 @@ export const CreateProductPage: React.FC = () => {
             <Form className="space-y-6">
               <motion.div variants={itemVariants}>
                 <Tabs value={activeTab} onValueChange={setActiveTab}>
-                  <TabsList className="grid w-full grid-cols-6 bg-gray-100 border border-indigo-100 dark:bg-gray-800/50 backdrop-blur-sm">
+                  <TabsList className="grid w-full grid-cols-7 bg-gray-100 border border-indigo-100 dark:bg-gray-800/50 backdrop-blur-sm">
                     <TabsTrigger
                       value="basic"
                       className="flex items-center space-x-2"
@@ -313,6 +323,13 @@ export const CreateProductPage: React.FC = () => {
                     >
                       <DollarSign className="w-4 h-4" />
                       <span className="hidden sm:inline">Pricing</span>
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="images"
+                      className="flex items-center space-x-2"
+                    >
+                      <DollarSign className="w-4 h-4" />
+                      <span className="hidden sm:inline">Product Images</span>
                     </TabsTrigger>
                     <TabsTrigger
                       value="inventory"
@@ -896,6 +913,18 @@ export const CreateProductPage: React.FC = () => {
                     </motion.div>
                   </TabsContent>
 
+                  {/* Product Images */}
+                  <TabsContent value="images" className="space-y-6">
+                    <ProductImageUpload
+                      images={values.images}
+                      onImagesChange={(images) =>
+                        setFieldValue("images", images)
+                      }
+                      maxImages={5}
+                      maxFileSize={10}
+                    />
+                  </TabsContent>
+
                   {/* Inventory Tab */}
                   <TabsContent value="inventory" className="space-y-6">
                     <motion.div
@@ -962,12 +991,93 @@ export const CreateProductPage: React.FC = () => {
                               </Label>
                               <Field name="barcode">
                                 {({ field }: any) => (
-                                  <Input
-                                    {...field}
-                                    id="barcode"
-                                    placeholder="e.g., 123456789012"
-                                    className="h-12"
-                                  />
+                                  <div className="relative">
+                                    <Input
+                                      {...field}
+                                      id="barcode"
+                                      placeholder="e.g., 123456789012"
+                                      className="h-12 pr-20"
+                                    />
+                                    <div className="flex items-center justify-center gap-2 absolute right-2 top-1/2 transform -translate-y-1/2">
+                                      <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => {
+                                          // Generate barcode based on product values
+                                          const generateBarcode = () => {
+                                            const timestamp = Date.now()
+                                              .toString()
+                                              .slice(-6);
+                                            const skuPart = values.sku
+                                              ? values.sku
+                                                  .replace(/[^a-zA-Z0-9]/g, "")
+                                                  .slice(0, 4)
+                                                  .toUpperCase()
+                                              : "PROD";
+                                            const categoryPart = values.category
+                                              ? values.category
+                                                  .slice(0, 2)
+                                                  .toUpperCase()
+                                              : "GN";
+                                            const pricePart = values.price
+                                              ? Math.floor(values.price)
+                                                  .toString()
+                                                  .padStart(3, "0")
+                                              : "000";
+
+                                            return `${skuPart}${categoryPart}${pricePart}${timestamp}`;
+                                          };
+
+                                          const generatedBarcode =
+                                            generateBarcode();
+                                          setFieldValue(
+                                            "barcode",
+                                            generatedBarcode
+                                          );
+                                          setShowBarcodePreview(true); // Show preview after generation
+                                        }}
+                                        className=" h-8 px-3 text-xs"
+                                      >
+                                        <BarChart3 className="w-3 h-3 mr-1" />
+                                        Generate
+                                      </Button>
+                                      {values.barcode && (
+                                        <Tooltip>
+                                          <TooltipContent>
+                                            Preview Barcode
+                                          </TooltipContent>
+
+                                          <TooltipTrigger>
+                                            <Button
+                                              type="button"
+                                              onClick={() => {
+                                                const params =
+                                                  new URLSearchParams({
+                                                    productId: v4(),
+                                                    barcode: values.barcode,
+                                                    productName:
+                                                      values.name ||
+                                                      "New Product",
+                                                    productPrice:
+                                                      values.price.toString(),
+                                                    sku: values.sku || "",
+                                                  });
+                                                window.open(
+                                                  `/qrcode?${params.toString()}`,
+                                                  "_blank"
+                                                );
+                                              }}
+                                              variant="outline"
+                                              size="icon"
+                                            >
+                                              <ArrowUpRight />
+                                            </Button>
+                                          </TooltipTrigger>
+                                        </Tooltip>
+                                      )}
+                                    </div>
+                                  </div>
                                 )}
                               </Field>
                             </div>
