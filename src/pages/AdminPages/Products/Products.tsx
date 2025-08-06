@@ -12,41 +12,25 @@ import {
   Archive,
   Star,
   TrendingUp,
-  TrendingDown,
   Package,
   DollarSign,
   BarChart3,
   Grid3X3,
   List,
   SortAsc,
-  SortDesc,
   Download,
-  Upload,
-  Settings,
-  RefreshCw,
   AlertCircle,
   CheckCircle,
-  Clock,
   X,
   ChevronDown,
   ChevronRight,
-  Image as ImageIcon,
-  Tag,
-  Calendar,
-  Users,
   ShoppingCart,
   Bell,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -54,7 +38,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuCheckboxItem,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
@@ -74,180 +57,61 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+
 import { useNavigate } from "react-router-dom";
-import { db } from "@/utils/pockatbase";
-import { useSelector } from "react-redux";
-import { selectUser } from "../Auth/slice/selector";
+import { db, getFilePreview } from "@/utils/pockatbase";
+// import { useSelector } from "react-redux";
+// import { selectUser } from "../../Auth/slice/selector";
 import { AdminDashboardNav } from "@/components/AdminDashboardNav";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ProductsPageSkeleton } from "@/components/Skeletons/ProductsPageSkeleton";
-
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  price: number;
-  compareAtPrice?: number;
-  costPrice: number;
-  sku: string;
-  status: "draft" | "active" | "archived";
-  tags: string[];
-  images: string[];
-  stock: number;
-  sales: number;
-  views: number;
-  rating: number;
-  createdAt: string;
-  updatedAt: string;
-  isDigital: boolean;
-  featured: boolean;
-}
+import { useGetAdminProductsQuery } from "./service";
+import type { Product } from "@/types";
 
 type ViewMode = "grid" | "list" | "table";
 type SortField =
   | "name"
   | "price"
   | "stock"
-  | "sales"
-  | "createdAt"
-  | "updatedAt";
+  | "sales_count"
+  | "created"
+  | "updated";
 type SortOrder = "asc" | "desc";
 
 export const ProductListPage: React.FC = () => {
   const navigate = useNavigate();
-  const user = useSelector(selectUser);
+  // const user = useSelector(selectUser);
 
   // State management
   const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
-  const [sortField, setSortField] = useState<SortField>("createdAt");
+  const [sortField, setSortField] = useState<SortField>("created");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
   const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 });
   const [stockFilter, setStockFilter] = useState("all");
-  const [dateRange, setDateRange] = useState("all");
+  // const [dateRange, setDateRange] = useState("all");
 
-  // Mock data for demonstration
-  const mockProducts: Product[] = [
-    {
-      id: "1",
-      name: "Premium Wireless Headphones",
-      description: "High-quality wireless headphones with noise cancellation",
-      category: "electronics",
-      price: 299.99,
-      compareAtPrice: 399.99,
-      costPrice: 150.0,
-      sku: "WH-001",
-      status: "active",
-      tags: ["wireless", "audio", "premium"],
-      images: [
-        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300",
-      ],
-      stock: 45,
-      sales: 127,
-      views: 1250,
-      rating: 4.8,
-      createdAt: "2024-01-15T10:30:00Z",
-      updatedAt: "2024-01-20T14:22:00Z",
-      isDigital: false,
-      featured: true,
-    },
-    {
-      id: "2",
-      name: "Organic Cotton T-Shirt",
-      description: "Comfortable organic cotton t-shirt in various colors",
-      category: "clothing",
-      price: 29.99,
-      costPrice: 12.0,
-      sku: "TS-002",
-      status: "active",
-      tags: ["organic", "cotton", "casual"],
-      images: [
-        "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300",
-      ],
-      stock: 120,
-      sales: 89,
-      views: 890,
-      rating: 4.5,
-      createdAt: "2024-01-10T09:15:00Z",
-      updatedAt: "2024-01-18T11:45:00Z",
-      isDigital: false,
-      featured: false,
-    },
-    {
-      id: "3",
-      name: "Digital Marketing Course",
-      description: "Complete digital marketing course with certificates",
-      category: "education",
-      price: 199.99,
-      costPrice: 0,
-      sku: "DMC-003",
-      status: "active",
-      tags: ["digital", "course", "marketing"],
-      images: [
-        "https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=300",
-      ],
-      stock: 999,
-      sales: 234,
-      views: 2340,
-      rating: 4.9,
-      createdAt: "2024-01-05T16:20:00Z",
-      updatedAt: "2024-01-22T08:30:00Z",
-      isDigital: true,
-      featured: true,
-    },
-    {
-      id: "4",
-      name: "Smart Home Security Camera",
-      description: "WiFi-enabled security camera with mobile app",
-      category: "electronics",
-      price: 149.99,
-      compareAtPrice: 199.99,
-      costPrice: 75.0,
-      sku: "SC-004",
-      status: "draft",
-      tags: ["smart", "security", "wifi"],
-      images: [
-        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300",
-      ],
-      stock: 0,
-      sales: 0,
-      views: 45,
-      rating: 0,
-      createdAt: "2024-01-25T12:00:00Z",
-      updatedAt: "2024-01-25T12:00:00Z",
-      isDigital: false,
-      featured: false,
-    },
-  ];
+  const { data, isLoading } = useGetAdminProductsQuery({
+    page: 1,
+    perPage: 10,
+  });
 
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setProducts(mockProducts);
-      setLoading(false);
-    }, 1000);
-  }, []);
+    if (data?.items) {
+      setProducts(data.items);
+    }
+  }, [data?.items]);
+  console.log(data);
 
   // Filtered and sorted products
   const filteredProducts = useMemo(() => {
-    const filtered = products.filter((product) => {
+    const filtered = products?.filter((product) => {
       const matchesSearch =
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -276,7 +140,7 @@ export const ProductListPage: React.FC = () => {
     });
 
     // Sort products
-    filtered.sort((a, b) => {
+    filtered?.sort((a, b) => {
       let aValue = a[sortField];
       let bValue = b[sortField];
 
@@ -330,10 +194,10 @@ export const ProductListPage: React.FC = () => {
   };
 
   const handleSelectAll = () => {
-    if (selectedProducts.length === filteredProducts.length) {
+    if (selectedProducts.length === filteredProducts?.length) {
       setSelectedProducts([]);
     } else {
-      setSelectedProducts(filteredProducts.map((p) => p.id));
+      setSelectedProducts(filteredProducts?.map((p) => p.id) as string[]);
     }
   };
 
@@ -377,7 +241,7 @@ export const ProductListPage: React.FC = () => {
     visible: { opacity: 1, y: 0 },
   };
 
-  if (loading) {
+  if (isLoading) {
     return <ProductsPageSkeleton />;
   }
 
@@ -546,7 +410,7 @@ export const ProductListPage: React.FC = () => {
               color: "from-orange-500 to-red-500",
               change: "-5%",
             },
-          ].map((stat, index) => (
+          ].map((stat) => (
             <motion.div
               key={stat.title}
               whileHover={{ scale: 1.02 }}
@@ -835,7 +699,7 @@ export const ProductListPage: React.FC = () => {
         <motion.div variants={itemVariants}>
           {viewMode === "grid" && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredProducts.map((product, index) => (
+              {products?.map((product, index) => (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -847,7 +711,11 @@ export const ProductListPage: React.FC = () => {
                   <Card className="bg-white/60 p-0 dark:bg-gray-800/60 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
                     <div className="relative">
                       <img
-                        src={product.images[0]}
+                        src={getFilePreview({
+                          fileName: product.images[0],
+                          collectionName: "products",
+                          recordId: product.id,
+                        })}
                         alt={product.name}
                         className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                       />
@@ -945,15 +813,15 @@ export const ProductListPage: React.FC = () => {
                         <div className="flex items-center justify-between text-xs text-gray-500">
                           <div className="flex items-center space-x-1">
                             <ShoppingCart className="w-3 h-3" />
-                            <span>{product.sales} sales</span>
+                            <span>{product.sales_count} sales</span>
                           </div>
                           <div className="flex items-center space-x-1">
                             <Eye className="w-3 h-3" />
-                            <span>{product.views} views</span>
+                            <span>{product.view_count} views</span>
                           </div>
                           <div className="flex items-center space-x-1">
                             <Star className="w-3 h-3 fill-current text-yellow-400" />
-                            <span>{product.rating}</span>
+                            <span>{product.average_rating}</span>
                           </div>
                         </div>
                       </div>
@@ -966,7 +834,7 @@ export const ProductListPage: React.FC = () => {
 
           {viewMode === "list" && (
             <div className="space-y-4">
-              {filteredProducts.map((product, index) => (
+              {filteredProducts?.map((product, index) => (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, x: -20 }}
@@ -984,7 +852,11 @@ export const ProductListPage: React.FC = () => {
                           }
                         />
                         <img
-                          src={product.images[0]}
+                          src={getFilePreview({
+                            fileName: product.images[0],
+                            collectionName: "products",
+                            recordId: product.id,
+                          })}
                           alt={product.name}
                           className="w-16 h-16 object-cover rounded-lg"
                         />
@@ -1037,11 +909,11 @@ export const ProductListPage: React.FC = () => {
                                   )}
                                 </div>
                                 <div className="flex items-center space-x-3 text-xs text-gray-500 mt-1">
-                                  <span>{product.sales} sales</span>
-                                  <span>{product.views} views</span>
+                                  <span>{product.sales_count} sales</span>
+                                  <span>{product.view_count} views</span>
                                   <div className="flex items-center space-x-1">
                                     <Star className="w-3 h-3 fill-current text-yellow-400" />
-                                    <span>{product.rating}</span>
+                                    <span>{product.average_rating}</span>
                                   </div>
                                 </div>
                               </div>
@@ -1102,8 +974,8 @@ export const ProductListPage: React.FC = () => {
                         <Checkbox
                           checked={
                             selectedProducts.length ===
-                              filteredProducts.length &&
-                            filteredProducts.length > 0
+                              filteredProducts?.length &&
+                            filteredProducts?.length > 0
                           }
                           onCheckedChange={handleSelectAll}
                         />
@@ -1119,7 +991,7 @@ export const ProductListPage: React.FC = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredProducts.map((product, index) => (
+                    {filteredProducts?.map((product, index) => (
                       <motion.tr
                         key={product.id}
                         initial={{ opacity: 0, y: 10 }}
@@ -1138,7 +1010,11 @@ export const ProductListPage: React.FC = () => {
                         <TableCell>
                           <div className="flex items-center space-x-3">
                             <img
-                              src={product.images[0]}
+                              src={getFilePreview({
+                                fileName: product.images[0],
+                                collectionName: "products",
+                                recordId: product.id,
+                              })}
                               alt={product.name}
                               className="w-10 h-10 object-cover rounded-lg"
                             />
@@ -1182,7 +1058,9 @@ export const ProductListPage: React.FC = () => {
                         <TableCell>
                           <div className="flex items-center space-x-1">
                             <ShoppingCart className="w-4 h-4 text-gray-400" />
-                            <span className="font-medium">{product.sales}</span>
+                            <span className="font-medium">
+                              {product.sales_count}
+                            </span>
                           </div>
                         </TableCell>
                         <TableCell>
@@ -1199,7 +1077,7 @@ export const ProductListPage: React.FC = () => {
                           <div className="flex items-center space-x-1">
                             <Star className="w-4 h-4 text-yellow-400 fill-current" />
                             <span className="font-medium">
-                              {product.rating}
+                              {product.average_rating}
                             </span>
                           </div>
                         </TableCell>
@@ -1248,7 +1126,7 @@ export const ProductListPage: React.FC = () => {
           )}
 
           {/* Empty State */}
-          {filteredProducts.length === 0 && (
+          {filteredProducts?.length === 0 && (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -1285,13 +1163,13 @@ export const ProductListPage: React.FC = () => {
         </motion.div>
 
         {/* Pagination */}
-        {filteredProducts.length > 0 && (
+        {Number(filteredProducts?.length) > 0 && (
           <motion.div
             variants={itemVariants}
             className="flex items-center justify-between"
           >
             <div className="text-sm text-gray-600 dark:text-gray-300">
-              Showing {filteredProducts.length} of {products.length} products
+              Showing {filteredProducts?.length} of {products.length} products
             </div>
             <div className="flex items-center space-x-2">
               <Button variant="outline" size="sm" disabled>

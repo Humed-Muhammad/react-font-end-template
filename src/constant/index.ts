@@ -49,3 +49,5 @@ export const ORDER_STATUSES = {
     icon: "XCircle",
   },
 };
+
+export const apiPath = "http://localhost:8090";

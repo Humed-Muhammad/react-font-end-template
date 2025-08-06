@@ -28,7 +28,7 @@ import { getUserTypeRedirect } from "./utils/auth";
 import { ProtectedRoute } from "./routes/ProtectedRoutes";
 import { NotFoundPage } from "./pages/Notfound";
 import { CreateProductPage } from "./pages/AdminPages/CreateProducts";
-import { ProductListPage } from "./pages/AdminPages/Products";
+import { ProductListPage } from "./pages/AdminPages/Products/Products";
 import { BarcodePage } from "./pages/BarcodePage";
 import { QRCodePage } from "./pages/QRCodePage";
 

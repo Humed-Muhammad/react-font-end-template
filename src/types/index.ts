@@ -65,3 +65,47 @@ export interface AuthState {
   loading: boolean;
   isAuthenticated: boolean;
 }
+
+export interface Product {
+  average_rating: number;
+  barcode: string;
+  businessId: string;
+  category: string;
+  comparePrice: number | null;
+  continueSellingWhenOutOfStock: boolean | null;
+  costPrice: number;
+  created: string; // ISO date string
+  description: string;
+  id: string;
+  images: string[];
+  isActive: boolean | null;
+  isFeatured: boolean | null;
+  metaDescription: string | null;
+  metaTitle: string | null;
+  name: string;
+  price: number;
+  rating_count: number;
+  requiresShipping: boolean;
+  sales_count: number;
+  sku: string;
+  slug: string | null;
+  tags: string[];
+  total_quantity_sold: number;
+  trackQuantity: boolean | null;
+  updated: string; // ISO date string
+  view_count: number;
+  weight: number;
+  weightUnit: string | null;
+  stock: number;
+  status: "active" | "draft" | "archived";
+  featured: boolean;
+  compareAtPrice: number;
+}
+
+export interface PaginatedResponse<T> {
+  items: T[];
+  page: number;
+  perPage: number;
+  totalItems: number;
+  totalPages: number;
+}
