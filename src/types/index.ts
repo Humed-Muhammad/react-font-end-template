@@ -109,3 +109,16 @@ export interface PaginatedResponse<T> {
   totalItems: number;
   totalPages: number;
 }
+
+export type Stats = {
+  [key in StatsKeys]: {
+    change: string;
+    value: string;
+  };
+};
+
+export type StatsKeys =
+  | "activeProducts"
+  | "lowStockProducts"
+  | "totalProducts"
+  | "totalValue";

@@ -67,6 +67,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ProductsPageSkeleton } from "@/components/Skeletons/ProductsPageSkeleton";
 import { useGetAdminProductsQuery } from "./service";
 import type { Product } from "@/types";
+import { useProductStats } from "./useProductStats";
 
 type ViewMode = "grid" | "list" | "table";
 type SortField =
@@ -168,22 +169,7 @@ export const ProductListPage: React.FC = () => {
     sortOrder,
   ]);
 
-  // Statistics
-  const stats = useMemo(() => {
-    const totalProducts = products.length;
-    const activeProducts = products.filter((p) => p.status === "active").length;
-    const totalValue = products.reduce((sum, p) => sum + p.price * p.stock, 0);
-    const lowStockProducts = products.filter(
-      (p) => p.stock > 0 && p.stock <= 10
-    ).length;
-
-    return {
-      totalProducts,
-      activeProducts,
-      totalValue,
-      lowStockProducts,
-    };
-  }, [products]);
+  const { addedEnhancement } = useProductStats(data?.stats);
 
   const handleSelectProduct = (productId: string) => {
     setSelectedProducts((prev) =>
@@ -381,36 +367,7 @@ export const ProductListPage: React.FC = () => {
           variants={itemVariants}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
         >
-          {[
-            {
-              title: "Total Products",
-              value: stats.totalProducts.toString(),
-              icon: Package,
-              color: "from-blue-500 to-cyan-500",
-              change: "+12%",
-            },
-            {
-              title: "Active Products",
-              value: stats.activeProducts.toString(),
-              icon: CheckCircle,
-              color: "from-green-500 to-emerald-500",
-              change: "+8%",
-            },
-            {
-              title: "Total Value",
-              value: `$${stats.totalValue.toLocaleString()}`,
-              icon: DollarSign,
-              color: "from-purple-500 to-pink-500",
-              change: "+15%",
-            },
-            {
-              title: "Low Stock",
-              value: stats.lowStockProducts.toString(),
-              icon: AlertCircle,
-              color: "from-orange-500 to-red-500",
-              change: "-5%",
-            },
-          ].map((stat) => (
+          {addedEnhancement?.map((stat) => (
             <motion.div
               key={stat.title}
               whileHover={{ scale: 1.02 }}

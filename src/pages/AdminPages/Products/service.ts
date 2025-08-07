@@ -1,12 +1,12 @@
 import { rootServiceApi } from "@/store/service";
-import type { PaginatedResponse, Product } from "@/types";
+import type { PaginatedResponse, Product, Stats } from "@/types";
 
+interface Response extends PaginatedResponse<Product> {
+  stats: Stats;
+}
 const productsService = rootServiceApi.injectEndpoints({
   endpoints: (build) => ({
-    getAdminProducts: build.query<
-      PaginatedResponse<Product>,
-      { page: number; perPage: number }
-    >({
+    getAdminProducts: build.query<Response, { page: number; perPage: number }>({
       query: (data) => ({
         url: "/products/admin",
         method: "POST",
