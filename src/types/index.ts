@@ -122,3 +122,13 @@ export type StatsKeys =
   | "lowStockProducts"
   | "totalProducts"
   | "totalValue";
+
+export type ProductCategory = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  image: string;
+  isActive: boolean;
+  businessId: string;
+};

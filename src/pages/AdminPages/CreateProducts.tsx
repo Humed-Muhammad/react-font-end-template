@@ -59,6 +59,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { v4 } from "uuid";
+import { useGetProductCategoriesQuery } from "./Products/service";
 
 // Product form data interface
 interface ProductFormData {
@@ -147,6 +148,8 @@ export const CreateProductPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState("basic");
   const [previewMode, setPreviewMode] = useState(false);
   const [showBarcodePreview, setShowBarcodePreview] = useState(false);
+  const { data, isLoading: isFetchingProductCategory } =
+    useGetProductCategoriesQuery();
 
   const initialValues: ProductFormData = {
     businessId: "current-business-id", // This should come from context
@@ -487,32 +490,14 @@ export const CreateProductPage: React.FC = () => {
                                     <SelectValue placeholder="Select a category" />
                                   </SelectTrigger>
                                   <SelectContent>
-                                    <SelectItem value="electronics">
-                                      Electronics
-                                    </SelectItem>
-                                    <SelectItem value="clothing">
-                                      Clothing
-                                    </SelectItem>
-                                    <SelectItem value="books">Books</SelectItem>
-                                    <SelectItem value="home">
-                                      Home & Garden
-                                    </SelectItem>
-                                    <SelectItem value="sports">
-                                      Sports & Outdoors
-                                    </SelectItem>
-                                    <SelectItem value="beauty">
-                                      Beauty & Personal Care
-                                    </SelectItem>
-                                    <SelectItem value="food">
-                                      Food & Beverages
-                                    </SelectItem>
-                                    <SelectItem value="toys">
-                                      Toys & Games
-                                    </SelectItem>
-                                    <SelectItem value="automotive">
-                                      Automotive
-                                    </SelectItem>
-                                    <SelectItem value="other">Other</SelectItem>
+                                    {data?.map((category) => (
+                                      <SelectItem
+                                        key={category.id}
+                                        value={category.id}
+                                      >
+                                        {category.name}
+                                      </SelectItem>
+                                    ))}
                                   </SelectContent>
                                 </Select>
                               )}
