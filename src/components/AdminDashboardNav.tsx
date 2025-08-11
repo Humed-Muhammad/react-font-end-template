@@ -3,7 +3,7 @@ import { Package } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const menus = [
-  { label: "Overview", link: "/dashboard/overview" },
+  { label: "Overview", link: "/dashboard" },
   {
     label: "orders",
     link: "/orders",
@@ -23,7 +23,7 @@ export const AdminDashboardNav = () => {
 
   const isActiveLink = (menuLink: string) => {
     // Exact match for overview, partial match for others
-    if (menuLink === "/dashboard/overview") {
+    if (menuLink === "/dashboard") {
       return (
         location.pathname === menuLink || location.pathname === "/dashboard"
       );
