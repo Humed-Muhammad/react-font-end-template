@@ -51,3 +51,11 @@ export const ORDER_STATUSES = {
 };
 
 export const apiPath = "http://localhost:8090";
+
+export const collectionNames = {
+  ORDERS: "orders",
+  USERS: "users",
+  PRODUCTS: "products",
+  PRODUCT_CATEGORIES: "product_categories",
+  PRODUCT_INVENTORY: "product_inventory",
+};

@@ -60,6 +60,7 @@ import {
 } from "@/components/ui/tooltip";
 import { v4 } from "uuid";
 import { useGetProductCategoriesQuery } from "./Products/service";
+import { collectionNames } from "@/constant";
 
 // Product form data interface
 interface ProductFormData {
@@ -93,6 +94,16 @@ interface ProductFormData {
   createdBy?: string;
   updatedBy?: string;
   slug?: string;
+  inventory: {
+    trackQuantity?: boolean;
+    quantity?: number;
+    reservedQuantity: number;
+    availableQuantity: number;
+    lowStockThreshold: number;
+    allowBackOrder: boolean;
+    product: string;
+  };
+  customFields: { name: string; value: string }[];
 }
 
 // Validation schema
@@ -179,6 +190,18 @@ export const CreateProductPage: React.FC = () => {
     seoDescription: "",
     images: [],
     seoKeywords: [],
+    customFields: [],
+    inventory: {
+      trackQuantity: false,
+      quantity: 0,
+      reservedQuantity: 0,
+      availableQuantity: 0,
+      lowStockThreshold: 0,
+      allowBackOrder: false,
+      product: "",
+    },
+    createdBy: user?.id,
+    updatedBy: user?.id,
   };
 
   const handleSubmit = async (values: ProductFormData) => {
@@ -194,7 +217,20 @@ export const CreateProductPage: React.FC = () => {
         updatedBy: user?.id as string,
       };
 
-      await db.collection("products").create(productData);
+      await db
+        .collection(collectionNames.PRODUCTS)
+        .create(productData)
+        .then((product) => {
+          db.collection(collectionNames.PRODUCT_INVENTORY).create({
+            product: product.id,
+            trackQuantity: productData.inventory.trackQuantity,
+            quantity: productData.inventory.quantity,
+            availableQuantity: productData.inventory.quantity,
+            lowStockThreshold: productData.inventory.lowStockThreshold,
+            createdBy: user?.id as string,
+            updatedBy: user?.id as string,
+          });
+        });
       setSuccess(true);
       setTimeout(() => {
         navigate("/products");
@@ -310,8 +346,15 @@ export const CreateProductPage: React.FC = () => {
           validationSchema={productValidationSchema}
           onSubmit={handleSubmit}
         >
-          {({ values, errors, touched, setFieldValue, isValid }) => (
-            <Form className="space-y-6">
+          {({
+            values,
+            errors,
+            touched,
+            setFieldValue,
+            handleSubmit,
+            isValid,
+          }) => (
+            <div className="space-y-6">
               <motion.div variants={itemVariants}>
                 <Tabs value={activeTab} onValueChange={setActiveTab}>
                   <TabsList className="grid w-full grid-cols-7 bg-gray-100 border border-indigo-100 dark:bg-gray-800/50 backdrop-blur-sm">
@@ -1105,7 +1148,7 @@ export const CreateProductPage: React.FC = () => {
                           </div>
 
                           {/* Product Variants */}
-                          <div className="space-y-2">
+                          {/* <div className="space-y-2">
                             <Label className="text-sm font-medium">
                               Product Variants
                             </Label>
@@ -1183,6 +1226,127 @@ export const CreateProductPage: React.FC = () => {
                                 </div>
                               )}
                             </FieldArray>
+                          </div> */}
+                          <div className="space-y-2">
+                            <Label
+                              htmlFor="quantity"
+                              className="text-sm font-medium"
+                            >
+                              Current Stock
+                            </Label>
+                            <Field name="inventory.quantity">
+                              {({ field }: any) => (
+                                <Input
+                                  {...field}
+                                  id="inventory.quantity"
+                                  type="number"
+                                  placeholder="0"
+                                  className={`h-12 ${
+                                    errors.inventory?.quantity &&
+                                    touched.inventory?.quantity
+                                      ? "border-red-500"
+                                      : ""
+                                  }`}
+                                />
+                              )}
+                            </Field>
+                            <AnimatePresence>
+                              {errors.inventory?.quantity &&
+                                touched.inventory?.quantity && (
+                                  <motion.p
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    className="text-red-500 text-xs flex items-center space-x-1"
+                                  >
+                                    <AlertCircle className="w-3 h-3" />
+                                    <span>{errors.inventory?.quantity}</span>
+                                  </motion.p>
+                                )}
+                            </AnimatePresence>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <Label className="text-sm font-medium">
+                                Track Quantity
+                              </Label>
+                              <p className="text-xs text-gray-500">
+                                Track inventory levels for this product
+                              </p>
+                            </div>
+                            <Field name="inventory.trackQuantity">
+                              {({ field }: any) => (
+                                <Switch
+                                  checked={field.value}
+                                  onCheckedChange={(checked) =>
+                                    setFieldValue(
+                                      "inventory.trackQuantity",
+                                      checked
+                                    )
+                                  }
+                                />
+                              )}
+                            </Field>
+                          </div>
+
+                          {values.inventory?.trackQuantity && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.3 }}
+                              className="space-y-4"
+                            >
+                              <div className="w-full">
+                                <div className="space-y-2">
+                                  <Label
+                                    htmlFor="inventory.lowStockThreshold"
+                                    className="text-sm font-medium"
+                                  >
+                                    Low Stock Threshold
+                                  </Label>
+                                  <p className="text-xs text-gray-500">
+                                    Will notify you when the inventory falls
+                                    below this threshold
+                                  </p>
+                                  <Field name="inventory.lowStockThreshold">
+                                    {({ field }: any) => (
+                                      <Input
+                                        {...field}
+                                        id="inventory.lowStockThreshold"
+                                        type="number"
+                                        placeholder="5"
+                                        className="h-12"
+                                      />
+                                    )}
+                                  </Field>
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <Label className="text-sm font-medium">
+                                Allow Back Orders
+                              </Label>
+                              <p className="text-xs text-gray-500">
+                                Allow customers to purchase when out of stock
+                              </p>
+                            </div>
+                            <Field name="inventory.allowBackOrder">
+                              {({ field }: any) => (
+                                <Switch
+                                  checked={field.value}
+                                  onCheckedChange={(checked) =>
+                                    setFieldValue(
+                                      "inventory.allowBackOrder",
+                                      checked
+                                    )
+                                  }
+                                />
+                              )}
+                            </Field>
                           </div>
                         </CardContent>
                       </Card>
@@ -1796,117 +1960,6 @@ export const CreateProductPage: React.FC = () => {
                             <div className="flex items-center justify-between">
                               <div>
                                 <Label className="text-sm font-medium">
-                                  Track Quantity
-                                </Label>
-                                <p className="text-xs text-gray-500">
-                                  Track inventory levels for this product
-                                </p>
-                              </div>
-                              <Field name="trackQuantity">
-                                {({ field }: any) => (
-                                  <Switch
-                                    checked={field.value}
-                                    onCheckedChange={(checked) =>
-                                      setFieldValue("trackQuantity", checked)
-                                    }
-                                  />
-                                )}
-                              </Field>
-                            </div>
-
-                            {values.trackQuantity && (
-                              <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: "auto" }}
-                                exit={{ opacity: 0, height: 0 }}
-                                transition={{ duration: 0.3 }}
-                                className="space-y-4"
-                              >
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                  <div className="space-y-2">
-                                    <Label
-                                      htmlFor="quantity"
-                                      className="text-sm font-medium"
-                                    >
-                                      Current Stock
-                                    </Label>
-                                    <Field name="quantity">
-                                      {({ field }: any) => (
-                                        <Input
-                                          {...field}
-                                          id="quantity"
-                                          type="number"
-                                          placeholder="0"
-                                          className={`h-12 ${
-                                            errors.quantity && touched.quantity
-                                              ? "border-red-500"
-                                              : ""
-                                          }`}
-                                        />
-                                      )}
-                                    </Field>
-                                    <AnimatePresence>
-                                      {errors.quantity && touched.quantity && (
-                                        <motion.p
-                                          initial={{ opacity: 0, y: -10 }}
-                                          animate={{ opacity: 1, y: 0 }}
-                                          exit={{ opacity: 0, y: -10 }}
-                                          className="text-red-500 text-xs flex items-center space-x-1"
-                                        >
-                                          <AlertCircle className="w-3 h-3" />
-                                          <span>{errors.quantity}</span>
-                                        </motion.p>
-                                      )}
-                                    </AnimatePresence>
-                                  </div>
-
-                                  <div className="space-y-2">
-                                    <Label
-                                      htmlFor="lowStockThreshold"
-                                      className="text-sm font-medium"
-                                    >
-                                      Low Stock Threshold
-                                    </Label>
-                                    <Field name="lowStockThreshold">
-                                      {({ field }: any) => (
-                                        <Input
-                                          {...field}
-                                          id="lowStockThreshold"
-                                          type="number"
-                                          placeholder="5"
-                                          className="h-12"
-                                        />
-                                      )}
-                                    </Field>
-                                  </div>
-                                </div>
-                              </motion.div>
-                            )}
-
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <Label className="text-sm font-medium">
-                                  Allow Backorders
-                                </Label>
-                                <p className="text-xs text-gray-500">
-                                  Allow customers to purchase when out of stock
-                                </p>
-                              </div>
-                              <Field name="allowBackorders">
-                                {({ field }: any) => (
-                                  <Switch
-                                    checked={field.value}
-                                    onCheckedChange={(checked) =>
-                                      setFieldValue("allowBackorders", checked)
-                                    }
-                                  />
-                                )}
-                              </Field>
-                            </div>
-
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <Label className="text-sm font-medium">
                                   Sold Individually
                                 </Label>
                                 <p className="text-xs text-gray-500">
@@ -2005,10 +2058,10 @@ export const CreateProductPage: React.FC = () => {
                   className="flex flex-col sm:flex-row gap-4 pt-6"
                 >
                   <Button
-                    type="submit"
+                    type="button"
                     onClick={() => {
                       setFieldValue("status", "active");
-                      handleSubmit(values);
+                      handleSubmit();
                     }}
                     disabled={isSubmitting || !isValid}
                     className="flex-1 h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium"
@@ -2031,7 +2084,7 @@ export const CreateProductPage: React.FC = () => {
                     variant="outline"
                     onClick={() => {
                       setFieldValue("status", "draft");
-                      handleSubmit(values);
+                      handleSubmit();
                     }}
                     disabled={isSubmitting}
                     className="flex-1 h-12"
@@ -2041,7 +2094,7 @@ export const CreateProductPage: React.FC = () => {
                   </Button>
                 </motion.div>
               </motion.div>
-            </Form>
+            </div>
           )}
         </Formik>
       </motion.div>
