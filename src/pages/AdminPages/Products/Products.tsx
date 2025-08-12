@@ -13,13 +13,11 @@ import {
   Star,
   TrendingUp,
   Package,
-  DollarSign,
   BarChart3,
   Grid3X3,
   List,
   SortAsc,
   Download,
-  AlertCircle,
   CheckCircle,
   X,
   ChevronDown,
@@ -119,7 +117,7 @@ export const ProductListPage: React.FC = () => {
         product.sku.toLowerCase().includes(searchQuery.toLowerCase());
 
       const matchesCategory =
-        selectedCategory === "all" || product.category === selectedCategory;
+        selectedCategory === "all" || product.category.id === selectedCategory;
       const matchesStatus =
         selectedStatus === "all" || product.status === selectedStatus;
       const matchesPrice =
@@ -741,7 +739,7 @@ export const ProductListPage: React.FC = () => {
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem
                                 onClick={() =>
-                                  navigate(`/admin/products/${product.id}`)
+                                  navigate(`/products/${product.id}`)
                                 }
                               >
                                 <Eye className="w-4 h-4 mr-2" />
@@ -749,7 +747,7 @@ export const ProductListPage: React.FC = () => {
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() =>
-                                  navigate(`/admin/products/${product.id}/edit`)
+                                  navigate(`/products/${product.id}/edit`)
                                 }
                               >
                                 <Edit className="w-4 h-4 mr-2" />
@@ -843,7 +841,7 @@ export const ProductListPage: React.FC = () => {
                                 SKU: {product.sku}
                               </span>
                               <span className="text-gray-500">
-                                Category: {product.category}
+                                Category: {product.category?.name}
                               </span>
                               <span
                                 className={`font-medium ${
@@ -883,7 +881,7 @@ export const ProductListPage: React.FC = () => {
                                 <DropdownMenuContent align="end">
                                   <DropdownMenuItem
                                     onClick={() =>
-                                      navigate(`/admin/products/${product.id}`)
+                                      navigate(`/products/${product.id}`)
                                     }
                                   >
                                     <Eye className="w-4 h-4 mr-2" />
@@ -891,9 +889,7 @@ export const ProductListPage: React.FC = () => {
                                   </DropdownMenuItem>
                                   <DropdownMenuItem
                                     onClick={() =>
-                                      navigate(
-                                        `/admin/products/${product.id}/edit`
-                                      )
+                                      navigate(`/products/${product.id}/edit`)
                                     }
                                   >
                                     <Edit className="w-4 h-4 mr-2" />
@@ -987,7 +983,7 @@ export const ProductListPage: React.FC = () => {
                         </TableCell>
                         <TableCell>
                           <Badge variant="outline" className="capitalize">
-                            {product.category}
+                            {product.category?.name}
                           </Badge>
                         </TableCell>
                         <TableCell>
@@ -1048,7 +1044,7 @@ export const ProductListPage: React.FC = () => {
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem
                                 onClick={() =>
-                                  navigate(`/admin/products/${product.id}`)
+                                  navigate(`/products/${product.id}`)
                                 }
                               >
                                 <Eye className="w-4 h-4 mr-2" />
@@ -1056,7 +1052,7 @@ export const ProductListPage: React.FC = () => {
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() =>
-                                  navigate(`/admin/products/${product.id}/edit`)
+                                  navigate(`/products/${product.id}/edit`)
                                 }
                               >
                                 <Edit className="w-4 h-4 mr-2" />
@@ -1106,7 +1102,7 @@ export const ProductListPage: React.FC = () => {
                     selectedCategory === "all" &&
                     selectedStatus === "all" && (
                       <Button
-                        onClick={() => navigate("/admin/products/new")}
+                        onClick={() => navigate("/products/new")}
                         className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                       >
                         <Plus className="w-4 h-4 mr-2" />

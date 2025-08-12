@@ -70,7 +70,10 @@ export interface Product {
   average_rating: number;
   barcode: string;
   businessId: string;
-  category: string;
+  category: {
+    id: string;
+    name: string;
+  };
   comparePrice: number | null;
   continueSellingWhenOutOfStock: boolean | null;
   costPrice: number;
@@ -100,6 +103,7 @@ export interface Product {
   status: "active" | "draft" | "archived";
   featured: boolean;
   compareAtPrice: number;
+  inventory: string;
 }
 
 export interface PaginatedResponse<T> {

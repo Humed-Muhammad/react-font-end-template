@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 // Auth components
@@ -15,19 +15,13 @@ import { Unauthorized } from "./pages/Unauthorized";
 
 // Protected pages
 import Dashboard from "./pages/Dashboard";
-// import { CustomerOrders } from "./pages/customer/CustomerOrders";
-// import { InventoryDashboard } from "./pages/inventory/InventoryDashboard";
-// import { POSDashboard } from "./pages/pos/POSDashboard";
-// import { DeliveryDashboard } from "./pages/delivery/DeliveryDashboard";
 
 // Components
 import { LoadingCircle } from "./components/icons";
 import { PublicRoute } from "./routes/PublicRoute";
-// import { ProtectedRoute } from "./routes/Providers";
-import { getUserTypeRedirect } from "./utils/auth";
 import { ProtectedRoute } from "./routes/ProtectedRoutes";
 import { NotFoundPage } from "./pages/Notfound";
-import { CreateProductPage } from "./pages/AdminPages/CreateProducts";
+import { CreateProductPage } from "./pages/AdminPages/Products/CreateProducts";
 import { ProductListPage } from "./pages/AdminPages/Products/Products";
 import { BarcodePage } from "./pages/BarcodePage";
 import { QRCodePage } from "./pages/QRCodePage";
@@ -262,6 +256,16 @@ const App: React.FC = () => {
         />
         <Route
           path="/products/new"
+          element={
+            <ProtectedRoute
+              allowedUserTypes={["admin", "service_owner", "inventory_manager"]}
+            >
+              <CreateProductPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/products/:productId/edit"
           element={
             <ProtectedRoute
               allowedUserTypes={["admin", "service_owner", "inventory_manager"]}

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Formik, Form, Field, FieldArray } from "formik";
+import { useNavigate, useParams } from "react-router-dom";
+import { Formik, Field, FieldArray } from "formik";
 import * as Yup from "yup";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -39,18 +39,16 @@ import {
   Save,
   Eye,
   BarChart3,
-  Palette,
-  ArrowLeft,
   FileText,
   AlertCircleIcon,
-  ArrowUpRight,
   Search,
   Barcode,
   QrCode,
+  RefreshCw,
 } from "lucide-react";
 import { db } from "@/utils/pockatbase";
 import { useSelector } from "react-redux";
-import { selectUser } from "../Auth/slice/selector";
+import { selectUser } from "../../Auth/slice/selector";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ProductImageUpload } from "@/components/ProductImageUpload";
 import {
@@ -59,8 +57,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { v4 } from "uuid";
-import { useGetProductCategoriesQuery } from "./Products/service";
+import {
+  useGetProductCategoriesQuery,
+  useGetSingleProductQuery,
+} from "./service";
 import { collectionNames } from "@/constant";
+import { FormikObserver } from "@/components/shared/FormikObserver";
 
 // Product form data interface
 interface ProductFormData {
@@ -158,10 +160,12 @@ export const CreateProductPage: React.FC = () => {
   const [success, setSuccess] = useState(false);
   const [activeTab, setActiveTab] = useState("basic");
   const [previewMode, setPreviewMode] = useState(false);
-  const [showBarcodePreview, setShowBarcodePreview] = useState(false);
-  const { data, isLoading: isFetchingProductCategory } =
-    useGetProductCategoriesQuery();
-
+  // const [showBarcodePreview, setShowBarcodePreview] = useState(false);
+  const { data } = useGetProductCategoriesQuery();
+  const { productId } = useParams();
+  const { data: editData } = useGetSingleProductQuery(productId as string, {
+    skip: !productId,
+  });
   const initialValues: ProductFormData = {
     businessId: "current-business-id", // This should come from context
     name: "",
@@ -216,25 +220,45 @@ export const CreateProductPage: React.FC = () => {
         createdBy: user?.id as string,
         updatedBy: user?.id as string,
       };
-
-      await db
-        .collection(collectionNames.PRODUCTS)
-        .create(productData)
-        .then((product) => {
-          db.collection(collectionNames.PRODUCT_INVENTORY).create({
-            product: product.id,
-            trackQuantity: productData.inventory.trackQuantity,
-            quantity: productData.inventory.quantity,
-            availableQuantity: productData.inventory.quantity,
-            lowStockThreshold: productData.inventory.lowStockThreshold,
-            createdBy: user?.id as string,
-            updatedBy: user?.id as string,
+      if (editData?.id) {
+        await db
+          .collection(collectionNames.PRODUCTS)
+          .update(editData.id, productData)
+          .then(async (product) => {
+            const inventory = await db
+              .collection(collectionNames.PRODUCT_INVENTORY)
+              .getFirstListItem(`product="${product.id}"`);
+            await db
+              .collection(collectionNames.PRODUCT_INVENTORY)
+              .update(inventory.id, {
+                product: product.id,
+                trackQuantity: productData.inventory.trackQuantity,
+                quantity: productData.inventory.quantity,
+                availableQuantity: productData.inventory.quantity,
+                lowStockThreshold: productData.inventory.lowStockThreshold,
+                updatedBy: user?.id as string,
+              });
           });
-        });
-      setSuccess(true);
-      setTimeout(() => {
-        navigate("/products");
-      }, 2000);
+      } else {
+        await db
+          .collection(collectionNames.PRODUCTS)
+          .create(productData)
+          .then((product) => {
+            db.collection(collectionNames.PRODUCT_INVENTORY).create({
+              product: product.id,
+              trackQuantity: productData.inventory.trackQuantity,
+              quantity: productData.inventory.quantity,
+              availableQuantity: productData.inventory.quantity,
+              lowStockThreshold: productData.inventory.lowStockThreshold,
+              createdBy: user?.id as string,
+              updatedBy: user?.id as string,
+            });
+          });
+        setSuccess(true);
+        setTimeout(() => {
+          navigate("/products");
+        }, 2000);
+      }
     } catch (error) {
       setError(error);
       console.error("Error creating product:", error);
@@ -1065,7 +1089,6 @@ export const CreateProductPage: React.FC = () => {
                                             "barcode",
                                             generatedBarcode
                                           );
-                                          setShowBarcodePreview(true); // Show preview after generation
                                         }}
                                         className=" h-8 px-3 text-xs"
                                       >
@@ -2069,31 +2092,38 @@ export const CreateProductPage: React.FC = () => {
                     {isSubmitting ? (
                       <>
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                        Creating Product...
+                        {editData ? "Updating" : "Creating"} Product...
                       </>
                     ) : (
                       <>
-                        <Save className="w-4 h-4 mr-2" />
-                        Create Product
+                        {editData ? (
+                          <RefreshCw className="w-4 h-4 mr-2" />
+                        ) : (
+                          <Save className="w-4 h-4 mr-2" />
+                        )}
+                        {editData ? "Update" : "Create"} Product
                       </>
                     )}
                   </Button>
 
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      setFieldValue("status", "draft");
-                      handleSubmit();
-                    }}
-                    disabled={isSubmitting}
-                    className="flex-1 h-12"
-                  >
-                    <FileText className="w-4 h-4 mr-2" />
-                    Save as Draft
-                  </Button>
+                  {!editData && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setFieldValue("status", "draft");
+                        handleSubmit();
+                      }}
+                      disabled={isSubmitting}
+                      className="flex-1 h-12"
+                    >
+                      <FileText className="w-4 h-4 mr-2" />
+                      Save as Draft
+                    </Button>
+                  )}
                 </motion.div>
               </motion.div>
+              <FormikObserver data={editData} />
             </div>
           )}
         </Formik>

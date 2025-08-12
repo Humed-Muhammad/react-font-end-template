@@ -25,8 +25,17 @@ const productsService = rootServiceApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    getSingleProduct: build.query<Product, string>({
+      query: (id) => ({
+        url: `/product/${id}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useGetAdminProductsQuery, useGetProductCategoriesQuery } =
-  productsService;
+export const {
+  useGetAdminProductsQuery,
+  useGetProductCategoriesQuery,
+  useGetSingleProductQuery,
+} = productsService;
