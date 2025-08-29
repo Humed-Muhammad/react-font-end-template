@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { OrderList } from "./OrderList";
 import type { Order } from "@/types";
@@ -164,11 +162,6 @@ export const Orders: React.FC = () => {
     }
   };
 
-  const handleExportOrders = () => {
-    // Implement export functionality
-    console.log("Exporting orders...");
-  };
-
   if (loading) {
     return <LoadingComponent />;
   }
@@ -190,24 +183,6 @@ export const Orders: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Action Bar */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4"
-        >
-          <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              onClick={handleExportOrders}
-              className="flex items-center gap-2"
-            >
-              <Download className="h-4 w-4" />
-              Export
-            </Button>
-          </div>
-        </motion.div>
-
         {/* Order List */}
         <OrderList
           orders={orders}

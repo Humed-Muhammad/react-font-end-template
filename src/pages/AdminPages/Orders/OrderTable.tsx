@@ -55,6 +55,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Progress } from "@/components/ui/progress";
 import type { Order } from "@/types";
+import { dateFormatter } from "@/utils/utils";
 
 interface OrderTableProps {
   orders: Partial<Order>[];
@@ -229,66 +230,68 @@ export const OrderTable: React.FC<OrderTableProps> = ({
         </div>
 
         {/* Enhanced Bulk Actions Bar */}
-        <AnimatePresence>
-          {selectedOrders.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: -20, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.95 }}
-              className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 shadow-sm"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
-                    {selectedOrders.length}
+        <div className="flex md:hidden">
+          <AnimatePresence>
+            {selectedOrders.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 shadow-sm"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                      {selectedOrders.length}
+                    </div>
+                    <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                      {selectedOrders.length} order
+                      {selectedOrders.length > 1 ? "s" : ""} selected
+                    </span>
                   </div>
-                  <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                    {selectedOrders.length} order
-                    {selectedOrders.length > 1 ? "s" : ""} selected
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => onBulkAction?.(selectedOrders, "export")}
+                      className="gap-2"
+                    >
+                      <Download className="w-4 h-4" />
+                      Export
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => onBulkAction?.(selectedOrders, "archive")}
+                      className="gap-2"
+                    >
+                      <Package className="w-4 h-4" />
+                      Archive
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => onBulkAction?.(selectedOrders, "delete")}
+                      className="gap-2"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      Delete
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setSelectedOrders([])}
+                      className="gap-2"
+                    >
+                      <XCircle className="w-4 h-4" />
+                      Clear
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => onBulkAction?.(selectedOrders, "export")}
-                    className="gap-2"
-                  >
-                    <Download className="w-4 h-4" />
-                    Export
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => onBulkAction?.(selectedOrders, "archive")}
-                    className="gap-2"
-                  >
-                    <Package className="w-4 h-4" />
-                    Archive
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => onBulkAction?.(selectedOrders, "delete")}
-                    className="gap-2"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                    Delete
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setSelectedOrders([])}
-                    className="gap-2"
-                  >
-                    <XCircle className="w-4 h-4" />
-                    Clear
-                  </Button>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
 
         {/* Enhanced Table */}
         <div className="bg-white  dark:bg-gray-800 rounded-md border border-gray-300/50 dark:border-gray-700/50 shadow overflow-hidden backdrop-blur-sm">
@@ -369,7 +372,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                   const PaymentIcon =
                     paymentStatusConfig[order.paymentStatus!]?.icon;
                   const isExpanded = expandedRows.has(order.id!);
-                  const priorityColor = getPriorityColor(order);
+                  //   const priorityColor = getPriorityColor(order);
 
                   return (
                     <React.Fragment key={order.id}>
@@ -378,7 +381,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ delay: index * 0.03 }}
-                        className={`group hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-indigo-50/50 dark:hover:from-blue-900/10 dark:hover:to-indigo-900/10 transition-all duration-200 cursor-pointer border-l-4 ${priorityColor} ${
+                        className={`group hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-indigo-50/50 dark:hover:from-blue-900/10 dark:hover:to-indigo-900/10 transition-all duration-200 cursor-pointer  ${
                           hoveredRow === order.id ? "shadow-lg" : ""
                         }`}
                         onClick={() => onSelect(order)}
@@ -405,9 +408,6 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xs shadow-lg">
                                 #{order.id?.slice(-4)}
                               </div>
-                              {order.status === "urgent" && (
-                                <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                              )}
                             </div>
                             <div className="min-w-0 flex-1">
                               <p className="font-semibold text-gray-900 dark:text-white truncate">
@@ -496,10 +496,15 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                                 )}
                               </span>
                             </div>
-                            {order.deliveryTime && (
+                            {order.estimatedDelivery && (
                               <div className="flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400">
                                 <TrendingUp className="w-3 h-3" />
-                                <span>ETA: {order.deliveryTime}</span>
+                                <span>
+                                  ETA:{" "}
+                                  {dateFormatter({
+                                    date: order.estimatedDelivery!,
+                                  })}
+                                </span>
                               </div>
                             )}
                           </div>
@@ -603,7 +608,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                                 </Badge>
                               </div>
                             )}
-                            {order.tip && Number(order.tip) > 0 && (
+                            {/* {!order.tip && Number(order.tip) > 0 && (
                               <p className="text-xs text-blue-600 dark:text-blue-400">
                                 +
                                 {formatCurrency(
@@ -612,7 +617,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                                 )}{" "}
                                 tip
                               </p>
-                            )}
+                            )} */}
                           </div>
                         </TableCell>
 
@@ -816,30 +821,6 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                                         Order Summary
                                       </h5>
                                       <div className="space-y-2 text-sm">
-                                        <div className="flex justify-between">
-                                          <span className="text-gray-500 dark:text-gray-400">
-                                            Subtotal:
-                                          </span>
-                                          <span className="text-gray-900 dark:text-white">
-                                            {formatCurrency(
-                                              Number(order.subtotal),
-                                              order.currency!
-                                            )}
-                                          </span>
-                                        </div>
-                                        {Number(order.taxAmount) > 0 && (
-                                          <div className="flex justify-between">
-                                            <span className="text-gray-500 dark:text-gray-400">
-                                              Tax:
-                                            </span>
-                                            <span className="text-gray-900 dark:text-white">
-                                              {formatCurrency(
-                                                Number(order.taxAmount),
-                                                order.currency!
-                                              )}
-                                            </span>
-                                          </div>
-                                        )}
                                         {Number(order.deliveryFee) > 0 && (
                                           <div className="flex justify-between">
                                             <span className="text-gray-500 dark:text-gray-400">
@@ -867,19 +848,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                                             </span>
                                           </div>
                                         )}
-                                        {Number(order.tip) > 0 && (
-                                          <div className="flex justify-between">
-                                            <span className="text-gray-500 dark:text-gray-400">
-                                              Tip:
-                                            </span>
-                                            <span className="text-blue-600 dark:text-blue-400">
-                                              {formatCurrency(
-                                                Number(order.tip),
-                                                order.currency!
-                                              )}
-                                            </span>
-                                          </div>
-                                        )}
+
                                         <div className="border-t border-gray-200 dark:border-gray-600 pt-2 mt-2">
                                           <div className="flex justify-between font-semibold">
                                             <span className="text-gray-900 dark:text-white">
@@ -984,72 +953,83 @@ export const OrderTable: React.FC<OrderTableProps> = ({
       </div>
 
       {/* Bulk Actions Bar */}
-      <AnimatePresence>
-        {selectedOrders.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-            className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50"
-          >
-            <div className="rounded-2xl shadow-md border border-gray-200 dark:border-gray-700 p-4 backdrop-blur-lg bg-white/95 dark:bg-gray-800/95">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-sm font-bold">
-                      {selectedOrders.length}
+      <div className="hidden md:flex">
+        <AnimatePresence>
+          {selectedOrders.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+              className="fixed bottom-10 left-1/2 transform -translate-x-1/2 z-50 min-w-1/2"
+            >
+              <div className="rounded-2xl shadow-md border border-gray-200 dark:border-gray-700 p-4 backdrop-blur-lg bg-white/95 dark:bg-gray-800/95">
+                <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-sm font-bold">
+                        {selectedOrders.length}
+                      </span>
+                    </div>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {selectedOrders.length} order
+                      {selectedOrders.length !== 1 ? "s" : ""} selected
                     </span>
                   </div>
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    {selectedOrders.length} order
-                    {selectedOrders.length !== 1 ? "s" : ""} selected
-                  </span>
-                </div>
 
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => onBulkAction?.(selectedOrders, "export")}
-                    className="hover:bg-blue-50 dark:hover:bg-blue-900/20"
-                  >
-                    <Download className="w-4 h-4 mr-2" />
-                    Export
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() =>
-                      onBulkAction?.(selectedOrders, "update_status")
-                    }
-                    className="hover:bg-green-50 dark:hover:bg-green-900/20"
-                  >
-                    <CheckCircle2 className="w-4 h-4 mr-2" />
-                    Update Status
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => onBulkAction?.(selectedOrders, "delete")}
-                    className="hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400"
-                  >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Delete
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setSelectedOrders([])}
-                    className="hover:bg-gray-50 dark:hover:bg-gray-700"
-                  >
-                    <XCircle className="w-4 h-4" />
-                  </Button>
+                  <div className="flex items-center gap-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => onBulkAction?.(selectedOrders, "export")}
+                      className="hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      Export
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => onBulkAction?.(selectedOrders, "archive")}
+                      className="gap-2"
+                    >
+                      <Package className="w-4 h-4" />
+                      Archive
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        onBulkAction?.(selectedOrders, "update_status")
+                      }
+                      className="hover:bg-green-50 dark:hover:bg-green-900/20"
+                    >
+                      <CheckCircle2 className="w-4 h-4 mr-2" />
+                      Update Status
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => onBulkAction?.(selectedOrders, "delete")}
+                      className="hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400"
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Delete
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setSelectedOrders([])}
+                      className="hover:bg-gray-50 dark:hover:bg-gray-700"
+                    >
+                      <XCircle className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </TooltipProvider>
   );
 

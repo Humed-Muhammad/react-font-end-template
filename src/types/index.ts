@@ -9,36 +9,6 @@ export interface OrderStatus {
   estimatedTime?: string;
 }
 
-// export interface Order {
-//   id: string;
-//   customerId: string;
-//   businessId: string;
-//   items: OrderItem[];
-//   totalAmount: number;
-//   currentStatus: string;
-//   statusHistory: OrderStatus[];
-//   createdAt: Date;
-//   updatedAt: Date;
-//   estimatedDelivery?: Date;
-//   customerNotes?: string;
-//   adminNotes?: string;
-// }
-
-export interface OrderItem {
-  order: string; // RELATION_RECORD_ID
-  product: string; // RELATION_RECORD_ID
-  variant: string; // RELATION_RECORD_ID
-  name: string;
-  sku: string;
-  quantity: number;
-  price: number;
-  totalPrice: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  snapshot: Record<string, any>; // or a stricter type if you know the shape
-  image: string; // URL
-  discount?: number;
-}
-
 export interface FormErrors {
   firstName?: string;
   lastName?: string;
@@ -153,7 +123,10 @@ export interface Order {
     email: string;
     phone: string;
     address: string;
+    isVip: boolean;
   }>;
+  paymentMethod: string;
+  deliveryFee: number;
   status:
     | "pending"
     | "preparing"
@@ -175,4 +148,19 @@ export interface Order {
   estimatedDelivery: string;
   customerNotes: string;
   deliveryAddress?: Record<string, string | number>; // or a more detailed Address type
+}
+
+export interface OrderItem {
+  order: string; // RELATION_RECORD_ID
+  product: string; // RELATION_RECORD_ID
+  variant: string; // RELATION_RECORD_ID
+  name: string;
+  sku: string;
+  quantity: number;
+  price: number;
+  totalPrice: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  snapshot: Record<string, any>; // or a stricter type if you know the shape
+  image: string; // URL
+  discount?: number;
 }

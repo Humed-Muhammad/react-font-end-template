@@ -1,12 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  signInWithPopup,
-  GoogleAuthProvider,
-  sendPasswordResetEmail,
-} from "firebase/auth";
-import { auth } from "@/utils/firebase";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { useNavigate, Link } from "react-router-dom";
 import {
   Eye,
@@ -159,7 +153,7 @@ export const LoginPage: React.FC = () => {
     setErrors({});
 
     try {
-      await sendPasswordResetEmail(auth, formData.email);
+      db.collection("users").requestPasswordReset(formData.email);
       setResetEmailSent(true);
       setShowForgotPassword(false);
     } catch (error: any) {
@@ -197,12 +191,12 @@ export const LoginPage: React.FC = () => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
   };
 
-  const successVariants = {
+  const successVariants: Variants = {
     hidden: { scale: 0, opacity: 0 },
     visible: {
       scale: 1,
@@ -215,7 +209,7 @@ export const LoginPage: React.FC = () => {
     },
   };
 
-  const floatingVariants = {
+  const floatingVariants: Variants = {
     animate: {
       y: [-10, 10, -10],
       rotate: [0, 5, -5, 0],

@@ -130,36 +130,6 @@ export const OrderList: React.FC<OrderListProps> = ({
             Manage and track all your orders
           </p>
         </div>
-
-        <div className="flex items-center gap-3">
-          <Button
-            variant="outline"
-            onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2"
-          >
-            <Filter className="h-4 w-4" />
-            Filters
-          </Button>
-
-          <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
-            <Button
-              variant={viewMode === "grid" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setViewMode("grid")}
-              className="px-3"
-            >
-              Grid
-            </Button>
-            <Button
-              variant={viewMode === "list" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setViewMode("list")}
-              className="px-3"
-            >
-              List
-            </Button>
-          </div>
-        </div>
       </div>
 
       {/* Stats Cards */}
