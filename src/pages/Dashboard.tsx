@@ -6,8 +6,6 @@ import {
   Users,
   DollarSign,
   Package,
-  Bell,
-  Search,
   Filter,
   Calendar,
   MoreVertical,
@@ -25,7 +23,6 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -38,8 +35,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { NotificationCenter } from "./NotificationCenter";
 import { useDisclosure } from "@/hooks/useDisclosure";
-import { db } from "@/utils/pockatbase";
-import { useNavigate } from "react-router-dom";
 import { AdminDashboardNav } from "@/components/AdminDashboardNav";
 
 interface Order {
@@ -77,8 +72,7 @@ export const Dashboard: React.FC = () => {
   const [selectedTimeRange, setSelectedTimeRange] = useState("today");
   const [searchQuery, setSearchQuery] = useState("");
   const notificationController = useDisclosure();
-  const [notifications, setNotifications] = useState([]);
-  const navigate = useNavigate();
+  const [notifications] = useState([]);
 
   // Mock data
   const [analytics] = useState<Analytics>({
@@ -190,67 +184,12 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-900">
       {/* Header */}
-      <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-gray-200/50 dark:border-gray-700/50 sticky top-0 z-50"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo and Navigation */}
-            <AdminDashboardNav />
 
-            {/* Search and Actions */}
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <Input
-                  placeholder="Search orders, customers..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 w-64 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-gray-200/50"
-                />
-              </div>
-
-              <Button
-                onClick={notificationController.onOpen}
-                variant="outline"
-                size="icon"
-                className="relative bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
-              >
-                <Bell className="w-4 h-4" />
-                <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-xs"></span>
-              </Button>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="relative h-8 w-8 rounded-full"
-                  >
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src="/api/placeholder/32/32" alt="User" />
-                      <AvatarFallback>JD</AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuItem>Settings</DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      db.authStore.clear();
-                      navigate("/");
-                    }}
-                  >
-                    Logout
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </div>
-        </div>
-      </motion.header>
+      {/* Logo and Navigation */}
+      <AdminDashboardNav
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -349,7 +288,7 @@ export const Dashboard: React.FC = () => {
                 icon: Target,
                 color: "from-orange-500 to-red-500",
               },
-            ].map((metric, index) => (
+            ].map((metric) => (
               <motion.div
                 key={metric.title}
                 whileHover={{ scale: 1.02 }}
@@ -462,7 +401,7 @@ export const Dashboard: React.FC = () => {
                       icon: Star,
                       color: "text-purple-500",
                     },
-                  ].map((stat, index) => (
+                  ].map((stat) => (
                     <div
                       key={stat.label}
                       className="flex items-center justify-between p-3 rounded-lg bg-gray-50/50 dark:bg-gray-700/50"
@@ -625,7 +564,7 @@ export const Dashboard: React.FC = () => {
                       color: "bg-orange-500",
                       icon: ChefHat,
                     },
-                  ].map((metric, index) => (
+                  ].map((metric) => (
                     <div key={metric.title} className="space-y-3">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
@@ -684,7 +623,7 @@ export const Dashboard: React.FC = () => {
                       icon: Filter,
                       color: "from-orange-500 to-red-500",
                     },
-                  ].map((action, index) => (
+                  ].map((action) => (
                     <motion.button
                       key={action.label}
                       whileHover={{ scale: 1.05 }}

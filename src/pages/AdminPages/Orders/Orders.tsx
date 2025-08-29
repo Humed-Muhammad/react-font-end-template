@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import { OrderList } from "./OrderList";
 import type { Order } from "@/types";
 import { LoadingComponent } from "@/components/shared/LoadingComponent";
+import { AdminDashboardNav } from "@/components/AdminDashboardNav";
 
 export const Orders: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useState("");
   const [orders, setOrders] = useState<Partial<Order>[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -181,7 +183,11 @@ export const Orders: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-900">
+      <AdminDashboardNav
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Order List */}
         <OrderList

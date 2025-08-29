@@ -23,7 +23,6 @@ import {
   ChevronDown,
   ChevronRight,
   ShoppingCart,
-  Bell,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -57,11 +56,10 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 
 import { useNavigate } from "react-router-dom";
-import { db, getFilePreview } from "@/utils/pockatbase";
+import { getFilePreview } from "@/utils/pockatbase";
 // import { useSelector } from "react-redux";
 // import { selectUser } from "../../Auth/slice/selector";
 import { AdminDashboardNav } from "@/components/AdminDashboardNav";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ProductsPageSkeleton } from "@/components/Skeletons/ProductsPageSkeleton";
 import { useGetAdminProductsQuery } from "./service";
 import type { Product } from "@/types";
@@ -236,61 +234,10 @@ export const ProductListPage: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-gray-200/50 dark:border-gray-700/50 sticky top-0 z-50"
       >
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo and Navigation */}
-            <AdminDashboardNav />
-
-            {/* Search and Actions */}
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <Input
-                  placeholder="Search orders, customers..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 w-64 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-gray-200/50"
-                />
-              </div>
-
-              <Button
-                // onClick={notificationController.onOpen}
-                variant="outline"
-                size="icon"
-                className="relative bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
-              >
-                <Bell className="w-4 h-4" />
-                <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-xs"></span>
-              </Button>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="relative h-8 w-8 rounded-full"
-                  >
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src="/api/placeholder/32/32" alt="User" />
-                      <AvatarFallback>JD</AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuItem>Settings</DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      db.authStore.clear();
-                      navigate("/");
-                    }}
-                  >
-                    Logout
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </div>
-        </div>
+        <AdminDashboardNav
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+        />
       </motion.header>
       <motion.div
         variants={containerVariants}
@@ -371,7 +318,7 @@ export const ProductListPage: React.FC = () => {
               whileHover={{ scale: 1.02 }}
               className="group"
             >
-              <Card className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+              <Card className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-0 shadow hover:shadow-md transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
@@ -409,7 +356,7 @@ export const ProductListPage: React.FC = () => {
               exit={{ opacity: 0, height: 0 }}
               variants={itemVariants}
             >
-              <Card className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-0 shadow-lg">
+              <Card className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-0 shadow">
                 <CardContent className="p-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div>
@@ -663,7 +610,7 @@ export const ProductListPage: React.FC = () => {
                   whileHover={{ scale: 1.02 }}
                   className="group"
                 >
-                  <Card className="bg-white/60 p-0 dark:bg-gray-800/60 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+                  <Card className="bg-white/60 p-0 dark:bg-gray-800/60 backdrop-blur-sm border-0 shadow hover:shadow-md transition-all duration-300 overflow-hidden">
                     <div className="relative">
                       <img
                         src={getFilePreview({
@@ -797,7 +744,7 @@ export const ProductListPage: React.FC = () => {
                   transition={{ delay: index * 0.05 }}
                   className="group"
                 >
-                  <Card className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <Card className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-0 shadow hover:shadow-md transition-all duration-300">
                     <CardContent className="p-4">
                       <div className="flex items-center space-x-4">
                         <Checkbox
@@ -918,7 +865,7 @@ export const ProductListPage: React.FC = () => {
           )}
 
           {viewMode === "table" && (
-            <Card className="bg-white/60 p-0 pb-2 dark:bg-gray-800/60 backdrop-blur-sm border-0 shadow-lg">
+            <Card className="bg-white/60 p-0 pb-2 dark:bg-gray-800/60 backdrop-blur-sm border-0 shadow">
               <CardContent className="p-0">
                 <Table>
                   <TableHeader>
@@ -1085,7 +1032,7 @@ export const ProductListPage: React.FC = () => {
               animate={{ opacity: 1, scale: 1 }}
               className="text-center py-12"
             >
-              <Card className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-0 shadow-lg">
+              <Card className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-0 shadow">
                 <CardContent className="p-12">
                   <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
