@@ -10,10 +10,10 @@ export const useAuth = () => {
     const fetchUser = async () => {
       try {
         dispatch(actions.setFetchingUser(true));
-        if (localUser.id) {
+        if (localUser?.id) {
           const record = (await db
             .collection("users")
-            .getOne(localUser.id)) as User;
+            .getOne(localUser?.id)) as User;
           dispatch(actions.setUser(record));
         }
       } catch (error) {
@@ -24,7 +24,7 @@ export const useAuth = () => {
     };
     fetchUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [localUser.id]);
+  }, [localUser?.id]);
 
   return {
     user,

@@ -24,6 +24,7 @@ import {
   StarOff,
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { getFilePreview } from "@/utils/pockatbase";
 
 /**
  * Props for the ProductImageUpload component
@@ -32,13 +33,13 @@ interface ProductImageUploadProps {
   /**
    * Array of currently uploaded image files
    */
-  images: File[];
+  images: (File | string)[];
 
   /**
    * Callback function called when the images array changes
    * @param images - Updated array of image files
    */
-  onImagesChange: (images: File[]) => void;
+  onImagesChange: (images: (File | string)[]) => void;
 
   /**
    * Maximum number of images that can be uploaded
@@ -57,10 +58,12 @@ interface ProductImageUploadProps {
    * @default ["image/jpeg", "image/png", "image/webp", "image/gif"]
    */
   acceptedFormats?: string[];
+  collectionName: string;
+  recordId: string | undefined;
 }
 
 interface ImagePreview {
-  file: File;
+  file: File | string;
   preview: string;
   id: string;
 }
@@ -71,6 +74,8 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
   maxImages = 10,
   maxFileSize = 5,
   acceptedFormats = ["image/jpeg", "image/png", "image/webp", "image/gif"],
+  collectionName,
+  recordId,
 }) => {
   const [imagePreviews, setImagePreviews] = useState<ImagePreview[]>([]);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -78,11 +83,20 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
 
   // Generate previews when images change
   React.useEffect(() => {
-    const previews: ImagePreview[] = images.map((file, index) => ({
-      file,
-      preview: URL.createObjectURL(file),
-      id: `${file.name}-${index}-${Date.now()}`,
-    }));
+    const previews: ImagePreview[] = images.map((file, index) => {
+      const isString = typeof file === "string";
+      return {
+        file,
+        preview: isString
+          ? getFilePreview({
+              collectionName,
+              fileName: file,
+              recordId,
+            })
+          : URL.createObjectURL(file),
+        id: isString ? file : `${file.name}-${index}-${Date.now()}`,
+      };
+    });
 
     setImagePreviews(previews);
 
@@ -370,11 +384,15 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
                       {/* Image Info */}
                       <div className="mt-2 space-y-1">
                         <p className="text-xs font-medium text-gray-900 dark:text-white truncate">
-                          {imagePreview.file.name}
+                          {typeof imagePreview.file === "string"
+                            ? imagePreview.file
+                            : imagePreview.file.name}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                          {formatFileSize(imagePreview.file.size)}
-                        </p>
+                        {typeof imagePreview.file !== "string" && (
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                            {formatFileSize(imagePreview.file.size)}
+                          </p>
+                        )}
                       </div>
                     </motion.div>
                   ))}
@@ -468,12 +486,16 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
                     {images.length} image{images.length !== 1 ? "s" : ""}{" "}
                     uploaded successfully
                   </p>
-                  <p className="text-xs text-green-700 dark:text-green-300">
-                    Total size:{" "}
-                    {formatFileSize(
-                      images.reduce((total, file) => total + file.size, 0)
-                    )}
-                  </p>
+                  {!recordId && (
+                    <p className="text-xs text-green-700 dark:text-green-300">
+                      Total size:{" "}
+                      {formatFileSize(
+                        images
+                          .filter((item) => typeof item !== "string")
+                          .reduce((total, file) => total + file.size, 0)
+                      )}
+                    </p>
+                  )}
                 </div>
               </div>
             </motion.div>

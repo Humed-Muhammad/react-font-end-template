@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { motion, useScroll, useTransform } from "framer-motion";
 
 // Auth components
 import { useAuth } from "./hooks/useAuth";
@@ -17,7 +16,6 @@ import { Unauthorized } from "./pages/Unauthorized";
 import Dashboard from "./pages/Dashboard";
 
 // Components
-import { LoadingCircle } from "./components/icons";
 import { PublicRoute } from "./routes/PublicRoute";
 import { ProtectedRoute } from "./routes/ProtectedRoutes";
 import { NotFoundPage } from "./pages/Notfound";
@@ -25,28 +23,14 @@ import { CreateProductPage } from "./pages/AdminPages/Products/CreateProducts";
 import { ProductListPage } from "./pages/AdminPages/Products/Products";
 import { BarcodePage } from "./pages/BarcodePage";
 import { QRCodePage } from "./pages/QRCodePage";
+import { Orders } from "./pages/AdminPages/Orders/Orders";
+import { LoadingComponent } from "./components/shared/LoadingComponent";
 
 const App: React.FC = () => {
   const { user, isFetchingUser } = useAuth();
-  const { scrollY } = useScroll();
-  const y1 = useTransform(scrollY, [0, 300], [0, -50]);
-  const y2 = useTransform(scrollY, [0, 300], [0, -100]);
 
   if (isFetchingUser && !user) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        {/* Animated Background Elements */}
-        <motion.div
-          style={{ y: y1 }}
-          className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-full blur-3xl"
-        />
-        <motion.div
-          style={{ y: y2 }}
-          className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-blue-400/20 to-cyan-400/20 rounded-full blur-3xl"
-        />
-        <LoadingCircle />
-      </div>
-    );
+    <LoadingComponent />;
   }
 
   return (
@@ -103,6 +87,17 @@ const App: React.FC = () => {
               allowedUserTypes={["service_owner", "product_owner", "admin"]}
             >
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute
+              allowedUserTypes={["service_owner", "product_owner", "admin"]}
+            >
+              <Orders />
             </ProtectedRoute>
           }
         />

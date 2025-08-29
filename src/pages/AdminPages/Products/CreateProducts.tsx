@@ -163,7 +163,7 @@ export const CreateProductPage: React.FC = () => {
   // const [showBarcodePreview, setShowBarcodePreview] = useState(false);
   const { data } = useGetProductCategoriesQuery();
   const { productId } = useParams();
-  const { data: editData } = useGetSingleProductQuery(productId as string, {
+  const { data: product } = useGetSingleProductQuery(productId as string, {
     skip: !productId,
   });
   const initialValues: ProductFormData = {
@@ -220,10 +220,10 @@ export const CreateProductPage: React.FC = () => {
         createdBy: user?.id as string,
         updatedBy: user?.id as string,
       };
-      if (editData?.id) {
+      if (product?.id) {
         await db
           .collection(collectionNames.PRODUCTS)
-          .update(editData.id, productData)
+          .update(product.id, productData)
           .then(async (product) => {
             const inventory = await db
               .collection(collectionNames.PRODUCT_INVENTORY)
@@ -976,6 +976,8 @@ export const CreateProductPage: React.FC = () => {
                       }
                       maxImages={5}
                       maxFileSize={10}
+                      collectionName="products"
+                      recordId={productId}
                     />
                   </TabsContent>
 
@@ -2092,21 +2094,21 @@ export const CreateProductPage: React.FC = () => {
                     {isSubmitting ? (
                       <>
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                        {editData ? "Updating" : "Creating"} Product...
+                        {product ? "Updating" : "Creating"} Product...
                       </>
                     ) : (
                       <>
-                        {editData ? (
+                        {product ? (
                           <RefreshCw className="w-4 h-4 mr-2" />
                         ) : (
                           <Save className="w-4 h-4 mr-2" />
                         )}
-                        {editData ? "Update" : "Create"} Product
+                        {product ? "Update" : "Create"} Product
                       </>
                     )}
                   </Button>
 
-                  {!editData && (
+                  {!product && (
                     <Button
                       type="button"
                       variant="outline"
@@ -2123,7 +2125,7 @@ export const CreateProductPage: React.FC = () => {
                   )}
                 </motion.div>
               </motion.div>
-              <FormikObserver data={editData} />
+              <FormikObserver data={product} />
             </div>
           )}
         </Formik>

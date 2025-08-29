@@ -9,27 +9,34 @@ export interface OrderStatus {
   estimatedTime?: string;
 }
 
-export interface Order {
-  id: string;
-  customerId: string;
-  businessId: string;
-  items: OrderItem[];
-  totalAmount: number;
-  currentStatus: string;
-  statusHistory: OrderStatus[];
-  createdAt: Date;
-  updatedAt: Date;
-  estimatedDelivery?: Date;
-  customerNotes?: string;
-  adminNotes?: string;
-}
+// export interface Order {
+//   id: string;
+//   customerId: string;
+//   businessId: string;
+//   items: OrderItem[];
+//   totalAmount: number;
+//   currentStatus: string;
+//   statusHistory: OrderStatus[];
+//   createdAt: Date;
+//   updatedAt: Date;
+//   estimatedDelivery?: Date;
+//   customerNotes?: string;
+//   adminNotes?: string;
+// }
 
 export interface OrderItem {
-  id: string;
+  order: string; // RELATION_RECORD_ID
+  product: string; // RELATION_RECORD_ID
+  variant: string; // RELATION_RECORD_ID
   name: string;
+  sku: string;
   quantity: number;
   price: number;
-  notes?: string;
+  totalPrice: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  snapshot: Record<string, any>; // or a stricter type if you know the shape
+  image: string; // URL
+  discount?: number;
 }
 
 export interface FormErrors {
@@ -136,3 +143,36 @@ export type ProductCategory = {
   isActive: boolean;
   businessId: string;
 };
+
+export interface Order {
+  id: string;
+  customer: Partial<{
+    id: string;
+    avatar: string;
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+  }>;
+  status:
+    | "pending"
+    | "preparing"
+    | "ready"
+    | "delivering"
+    | "delivered"
+    | "cancelled";
+  paymentStatus: "unpaid" | "paid" | "refunded" | "partially_paid";
+  totalAmount: number;
+  shippingCost: number;
+  discountAmount: number;
+  currency: string;
+  shippingAddress: Record<string, string | number>; // or a more detailed Address type
+  billingAddress: Record<string, string | number>; // or a more detailed Address type
+  notes?: string;
+  items: OrderItem[];
+  created: string;
+  updated: string;
+  estimatedDelivery: string;
+  customerNotes: string;
+  deliveryAddress?: Record<string, string | number>; // or a more detailed Address type
+}
