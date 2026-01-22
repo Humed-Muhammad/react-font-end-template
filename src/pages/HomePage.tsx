@@ -47,7 +47,7 @@ export const HomePage: React.FC = () => {
       title: "Smart Order Management",
       description:
         "Streamline your order processing with intelligent automation and real-time tracking",
-      color: "from-blue-500 to-cyan-500",
+      color: "from-gray-500 to-cyan-500",
     },
     {
       icon: <BarChart3 className="h-8 w-8" />,
@@ -228,14 +228,14 @@ export const HomePage: React.FC = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="mb-8"
           >
-            <Badge className="mb-4 px-4 py-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-0">
+            <Badge className="mb-4 px-4 py-2 bg-gradient-to-r from-gray-500 to-cyan-500 text-white border-0">
               <ShoppingCart className="h-4 w-4 mr-2" />
               Order Management SaaS
             </Badge>
             <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 dark:from-white dark:via-blue-200 dark:to-white bg-clip-text text-transparent leading-tight">
               Streamline Your
               <br />
-              <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-gray-600 to-cyan-600 bg-clip-text text-transparent">
                 Order Management
               </span>
             </h1>
@@ -254,7 +254,7 @@ export const HomePage: React.FC = () => {
           >
             <Button
               size="lg"
-              className="h-14 px-8 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-semibold rounded-xl shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 transform hover:scale-105"
+              className="h-14 px-8 bg-gradient-to-r from-gray-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-semibold rounded-xl shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 transform hover:scale-105"
             >
               <Play className="h-5 w-5 mr-2" />
               Start Free Trial
@@ -397,7 +397,7 @@ export const HomePage: React.FC = () => {
                 viewport={{ once: true }}
                 className="flex items-start space-x-4 p-6 rounded-xl hover:bg-white/50 dark:hover:bg-slate-800/50 transition-all duration-300"
               >
-                <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center text-white">
+                <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-r from-gray-500 to-cyan-500 rounded-lg flex items-center justify-center text-white">
                   {feature.icon}
                 </div>
                 <div>
@@ -464,7 +464,7 @@ export const HomePage: React.FC = () => {
                       "{testimonial.content}"
                     </p>
                     <div className="flex items-center">
-                      <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-3">
+                      <div className="w-10 h-10 bg-gradient-to-r from-gray-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-3">
                         {testimonial.avatar}
                       </div>
                       <div>
@@ -494,14 +494,14 @@ export const HomePage: React.FC = () => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <Badge className="mb-4 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white border-0">
+            <Badge className="mb-4 px-4 py-2 bg-gradient-to-r from-indigo-500 to-gray-700 text-white border-0">
               <CreditCard className="h-4 w-4 mr-2" />
               Simple Pricing
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-slate-900 dark:text-white">
               Choose Your
               <br />
-              <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-indigo-600 to-gray-700 bg-clip-text text-transparent">
                 Perfect Plan
               </span>
             </h2>
@@ -582,7 +582,7 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 px-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white">
+      <section className="py-24 px-4 bg-gradient-to-r from-gray-600 to-cyan-600 text-white">
         <div className="container mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 50 }}

@@ -43,7 +43,7 @@ export default function LegalPage() {
         >
           <div className="flex items-center flex-col md:flex-row gap-2 justify-center mb-4">
             <Shield className="h-12 w-12 text-blue-600 mr-3" />
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-600 to-indigo-600 bg-clip-text text-transparent">
               Legal Information
             </h1>
           </div>

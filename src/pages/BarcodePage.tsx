@@ -355,7 +355,7 @@ export const BarcodePage: React.FC = () => {
             <Button
               onClick={handlePrint}
               size="lg"
-              className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              className="flex items-center space-x-2 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-blue-700 hover:to-purple-700"
             >
               <Printer className="w-5 h-5" />
               <span>Print Barcode</span>

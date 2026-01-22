@@ -231,7 +231,7 @@ export const SignupPage: React.FC = () => {
         <Card className="backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 border-0 shadow-2xl">
           <CardHeader className="text-center pb-6">
             <motion.div variants={itemVariants}>
-              <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <CardTitle className="text-3xl font-bold bg-gradient-to-r from-gray-600 to-gray-700 bg-clip-text text-transparent">
                 Create Account
               </CardTitle>
               <CardDescription className="text-gray-600 dark:text-gray-300 mt-2">
@@ -475,7 +475,7 @@ export const SignupPage: React.FC = () => {
               <motion.div variants={itemVariants}>
                 <Button
                   type="submit"
-                  className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium transition-all duration-200 transform hover:scale-[1.02]"
+                  className="w-full h-12 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-blue-700 hover:to-purple-700 text-white font-medium transition-all duration-200 transform hover:scale-[1.02]"
                   disabled={loading}
                 >
                   {loading ? (

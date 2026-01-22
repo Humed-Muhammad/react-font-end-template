@@ -17,7 +17,7 @@ export const features = [
     description: "Streamline order processing with automation",
     icon: <ShoppingCart className="h-8 w-6 text-white" />,
     href: "/features/order-management",
-    color: "from-blue-500 to-cyan-500",
+    color: "from-gray-500 to-cyan-500",
     badge: "Popular",
   },
   {
@@ -49,7 +49,7 @@ export const features = [
     description: "Secure payment gateway integration",
     icon: <CreditCard className="h-8 w-6 text-white" />,
     href: "/features/payments",
-    color: "from-indigo-500 to-purple-500",
+    color: "from-indigo-500 to-gray-700",
     badge: null,
   },
   {

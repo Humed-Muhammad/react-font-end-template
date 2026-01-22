@@ -110,7 +110,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
   const getRelativeTime = (date: Date) => {
     const now = new Date();
     const diffInMinutes = Math.floor(
-      (now.getTime() - new Date(date).getTime()) / (1000 * 60)
+      (now.getTime() - new Date(date).getTime()) / (1000 * 60),
     );
 
     if (diffInMinutes < 1) return "Just now";
@@ -308,7 +308,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
 
           <Table>
             <TableHeader>
-              <TableRow className="bg-gradient-to-r from-gray-50 to-gray-100/50 dark:from-gray-800/50 dark:to-gray-700/50 hover:from-gray-100 hover:to-gray-100 dark:hover:from-gray-700/50 dark:hover:to-gray-700/50 border-b border-gray-200/50 dark:border-gray-700/50">
+              <TableRow className="bg-gradient-to-r from-gray-50 to-gray-100/50 dark:from-gray-800/50 dark:to-gray-700/50 hover:from-gray-100 hover:to-gray-100 dark:hover:to-gray-700/50 dark:hover:to-gray-700/50 border-b border-gray-200/50 dark:border-gray-700/50">
                 <TableHead className="w-12 pl-6">
                   <Checkbox
                     checked={
@@ -405,7 +405,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                         <TableCell>
                           <div className="flex items-center gap-3">
                             <div className="relative">
-                              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xs shadow-lg">
+                              <div className="w-10 h-10 bg-gradient-to-br from-gray-500 via-purple-500 to-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xs shadow-lg">
                                 #{order.id?.slice(-4)}
                               </div>
                             </div>
@@ -492,7 +492,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                                   {
                                     hour: "2-digit",
                                     minute: "2-digit",
-                                  }
+                                  },
                                 )}
                               </span>
                             </div>
@@ -588,7 +588,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                             <p className="font-bold text-lg text-gray-900 dark:text-white">
                               {formatCurrency(
                                 Number(order.totalAmount),
-                                order.currency!
+                                order.currency!,
                               )}
                             </p>
                             {Number(order.discountAmount) > 0 && (
@@ -597,7 +597,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                                   -
                                   {formatCurrency(
                                     order.discountAmount!,
-                                    order.currency!
+                                    order.currency!,
                                   )}
                                 </span>
                                 <Badge
@@ -721,7 +721,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                                                 Qty: {item.quantity} ×{" "}
                                                 {formatCurrency(
                                                   item.price,
-                                                  order.currency!
+                                                  order.currency!,
                                                 )}
                                               </p>
                                             </div>
@@ -730,7 +730,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                                             <p className="font-semibold text-gray-900 dark:text-white">
                                               {formatCurrency(
                                                 item.price * item.quantity,
-                                                order.currency!
+                                                order.currency!,
                                               )}
                                             </p>
                                             {item.discount && (
@@ -738,7 +738,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                                                 -
                                                 {formatCurrency(
                                                   item.discount,
-                                                  order.currency!
+                                                  order.currency!,
                                                 )}
                                               </p>
                                             )}
@@ -829,7 +829,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                                             <span className="text-gray-900 dark:text-white">
                                               {formatCurrency(
                                                 Number(order.deliveryFee),
-                                                order.currency!
+                                                order.currency!,
                                               )}
                                             </span>
                                           </div>
@@ -843,7 +843,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                                               -
                                               {formatCurrency(
                                                 Number(order.discountAmount),
-                                                order.currency!
+                                                order.currency!,
                                               )}
                                             </span>
                                           </div>
@@ -857,7 +857,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                                             <span className="text-gray-900 dark:text-white text-lg">
                                               {formatCurrency(
                                                 Number(order.totalAmount),
-                                                order.currency!
+                                                order.currency!,
                                               )}
                                             </span>
                                           </div>
@@ -890,7 +890,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                                   <Button
                                     size="sm"
                                     onClick={() => onEdit(order)}
-                                    className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+                                    className="bg-gradient-to-r from-gray-500 to-gray-700 hover:from-gray-600 hover:to-purple-700"
                                   >
                                     <Edit className="w-4 h-4 mr-2" />
                                     Edit Order
@@ -916,7 +916,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
             animate={{ opacity: 1, y: 0 }}
             className="text-center py-16"
           >
-            <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 dark:to-gray-700 dark:to-gray-600 rounded-full flex items-center justify-center mx-auto mb-6">
               <ShoppingBag className="w-12 h-12 text-gray-400" />
             </div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">

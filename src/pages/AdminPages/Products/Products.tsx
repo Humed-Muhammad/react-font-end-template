@@ -171,7 +171,7 @@ export const ProductListPage: React.FC = () => {
     setSelectedProducts((prev) =>
       prev.includes(productId)
         ? prev.filter((id) => id !== productId)
-        : [...prev, productId]
+        : [...prev, productId],
     );
   };
 
@@ -251,7 +251,7 @@ export const ProductListPage: React.FC = () => {
           className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4"
         >
           <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-600 to-purple-600 bg-clip-text text-transparent">
               Products
             </h1>
             <p className="text-gray-600 dark:text-gray-300 mt-2">
@@ -299,7 +299,7 @@ export const ProductListPage: React.FC = () => {
             </DropdownMenu>
             <Button
               onClick={() => navigate("/products/new")}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              className="bg-gradient-to-r from-gray-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add Product
@@ -1050,7 +1050,7 @@ export const ProductListPage: React.FC = () => {
                     selectedStatus === "all" && (
                       <Button
                         onClick={() => navigate("/products/new")}
-                        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                        className="bg-gradient-to-r from-gray-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                       >
                         <Plus className="w-4 h-4 mr-2" />
                         Add Your First Product

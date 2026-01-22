@@ -282,12 +282,12 @@ export const LoginPage: React.FC = () => {
                 <motion.div
                   whileHover={{ rotate: 360 }}
                   transition={{ duration: 0.5 }}
-                  className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg"
+                  className="w-16 h-16 bg-gradient-to-r from-gray-500 to-gray-700 rounded-2xl flex items-center justify-center shadow-lg"
                 >
                   <Shield className="w-8 h-8 text-white" />
                 </motion.div>
               </div>
-              <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <CardTitle className="text-3xl font-bold bg-gradient-to-r from-gray-600 to-gray-700 bg-clip-text text-transparent">
                 Welcome Back
               </CardTitle>
               <CardDescription className="text-gray-600 dark:text-gray-300 mt-2">
@@ -436,7 +436,7 @@ export const LoginPage: React.FC = () => {
               <motion.div variants={itemVariants} className="pt-4">
                 <Button
                   type="submit"
-                  className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] group"
+                  className="w-full h-12 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] group"
                   disabled={loading}
                 >
                   {loading ? (
@@ -560,7 +560,7 @@ export const LoginPage: React.FC = () => {
                   <Button
                     onClick={handleForgotPassword}
                     disabled={loading}
-                    className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    className="flex-1 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-blue-700 hover:to-purple-700"
                   >
                     {loading ? (
                       <motion.div

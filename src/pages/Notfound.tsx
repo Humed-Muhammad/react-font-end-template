@@ -184,7 +184,7 @@ export const NotFoundPage: React.FC = () => {
     setTimeout(() => {
       setIsHeartClicked(false);
       setFloatingHearts((prev) =>
-        prev.filter((heart) => !newHearts.includes(heart))
+        prev.filter((heart) => !newHearts.includes(heart)),
       );
     }, 2000);
   };
@@ -289,7 +289,7 @@ export const NotFoundPage: React.FC = () => {
           className="text-center mb-8"
         >
           <motion.h1
-            className="text-8xl md:text-9xl font-black bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent leading-none select-none mb-4"
+            className="text-8xl md:text-9xl font-black bg-gradient-to-r from-gray-600 via-gray-600 to-stone-600 bg-clip-text text-transparent leading-none select-none mb-4"
             animate={{
               backgroundPosition: ["0%", "100%", "0%"],
             }}
@@ -305,7 +305,7 @@ export const NotFoundPage: React.FC = () => {
             initial={{ width: 0 }}
             animate={{ width: "100%" }}
             transition={{ duration: 2, delay: 1 }}
-            className="h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full mx-auto max-w-xs"
+            className="h-1 bg-gradient-to-r from-gray-500 via-blue-500 to-stone-500 rounded-full mx-auto max-w-xs"
           />
         </motion.div>
 
@@ -315,7 +315,7 @@ export const NotFoundPage: React.FC = () => {
           variants={itemVariants}
           className="max-w-2xl mx-auto text-center"
         >
-          <Card className="backdrop-blur-xl bg-white/80 dark:bg-gray-800/80 border-0 shadow-2xl shadow-purple-500/10 p-8 md:p-12 rounded-3xl">
+          <Card className="backdrop-blur-xl bg-white/80 dark:bg-gray-800/80 border-0 shadow-2xl shadow-stone-500/10 p-8 md:p-12 rounded-3xl">
             <motion.div className="space-y-6">
               {/* Cute Panda Animation - Now inside the card */}
               <motion.div
@@ -368,7 +368,7 @@ export const NotFoundPage: React.FC = () => {
                 </div>
                 <Button
                   type="submit"
-                  className="h-12 px-8 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105"
+                  className="h-12 px-8 bg-gradient-to-r from-gray-600 to-stone-600 hover:from-gray-700 hover:to-stone-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105"
                 >
                   <Search className="w-5 h-5 mr-2" />
                   Search
@@ -391,7 +391,7 @@ export const NotFoundPage: React.FC = () => {
                 </Button>
                 <Button
                   asChild
-                  className="h-12 px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105"
+                  className="h-12 px-6 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-stone-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105"
                 >
                   <Link to="/">
                     <Home className="w-5 h-5 mr-2" />

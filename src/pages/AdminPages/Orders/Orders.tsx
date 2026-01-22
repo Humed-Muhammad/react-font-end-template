@@ -4,11 +4,12 @@ import { OrderList } from "./OrderList";
 import type { Order } from "@/types";
 import { LoadingComponent } from "@/components/shared/LoadingComponent";
 import { AdminDashboardNav } from "@/components/AdminDashboardNav";
+import { useGetOrdersQuery } from "./services";
 
 export const Orders: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [orders, setOrders] = useState<Partial<Order>[]>([]);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Mock data for development - replace with actual API calls
@@ -47,9 +48,7 @@ export const Orders: React.FC = () => {
 
       created: new Date().toISOString(),
       updated: new Date().toISOString(),
-      estimatedDelivery: new Date(
-        Date.now() + 3 * 24 * 60 * 60 * 1000
-      ).toISOString(),
+
       customerNotes: "Please deliver after 2 PM",
     },
     {
@@ -78,9 +77,6 @@ export const Orders: React.FC = () => {
 
       created: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
       updated: new Date().toISOString(),
-      estimatedDelivery: new Date(
-        Date.now() + 2 * 24 * 60 * 60 * 1000
-      ).toISOString(),
     },
     {
       id: "ORD-003",
@@ -108,36 +104,37 @@ export const Orders: React.FC = () => {
 
       created: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
       updated: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-      estimatedDelivery: new Date(
-        Date.now() - 24 * 60 * 60 * 1000
-      ).toISOString(),
     },
   ];
 
-  useEffect(() => {
-    // Simulate API call
-    const fetchOrders = async () => {
-      try {
-        setLoading(true);
-        // Replace with actual API call
-        // const response = await fetch(`${apiPath}/api/collections/${collectionNames.ORDERS}/records`);
-        // const data = await response.json();
+  // useEffect(() => {
+  //   // Simulate API call
+  //   const fetchOrders = async () => {
+  //     try {
+  //       setLoading(true);
+  //       // Replace with actual API call
+  //       // const response = await fetch(`${apiPath}/api/collections/${collectionNames.ORDERS}/records`);
+  //       // const data = await response.json();
 
-        // Simulate network delay
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+  //       // Simulate network delay
+  //       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        setOrders(mockOrders);
-        setError(null);
-      } catch (err) {
-        setError("Failed to fetch orders");
-        console.error("Error fetching orders:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  //       setOrders(mockOrders);
+  //       setError(null);
+  //     } catch (err) {
+  //       setError("Failed to fetch orders");
+  //       console.error("Error fetching orders:", err);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchOrders();
-  }, []);
+  //   fetchOrders();
+  // }, []);
+  const { data, isLoading } = useGetOrdersQuery({
+    page: 1,
+    perPage: 10,
+  });
 
   const handleOrderSelect = (order: Partial<Order>) => {
     console.log("Order selected:", order);
@@ -164,7 +161,7 @@ export const Orders: React.FC = () => {
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return <LoadingComponent />;
   }
 
@@ -191,7 +188,7 @@ export const Orders: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Order List */}
         <OrderList
-          orders={orders}
+          orders={data?.items ?? []}
           onOrderSelect={handleOrderSelect}
           onOrderEdit={handleOrderEdit}
           onOrderDelete={handleOrderDelete}

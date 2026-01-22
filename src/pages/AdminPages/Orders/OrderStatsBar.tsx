@@ -100,7 +100,7 @@ export const OrderStatsBar: React.FC<OrderStatsBarProps> = ({
         {/* Header Row */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-gray-500 to-gray-700 flex items-center justify-center">
               <Package className="w-4 h-4 text-white" />
             </div>
             <div>
@@ -143,9 +143,9 @@ export const OrderStatsBar: React.FC<OrderStatsBarProps> = ({
                 </span>
               </div>
               <div
-                className={`text-xs px-1.5 py-0.5 rounded-md ${stat.textColor} bg-current bg-opacity-10 opacity-0 group-hover:opacity-100 transition-opacity`}
+                className={`text-xs px-1.5 py-0.5 rounded-md bg-opacity-10 opacity-0 group-hover:opacity-100 transition-opacity`}
               >
-                {stat.percentage.toFixed(0)}%
+                {stat.percentage.toFixed(1)}%
               </div>
             </motion.div>
           ))}

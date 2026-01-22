@@ -7,7 +7,7 @@ const placeHolder = [
     title: "Total Products",
     value: "",
     icon: Package,
-    color: "from-blue-500 to-cyan-500",
+    color: "from-gray-500 to-cyan-500",
     change: "+12%",
     key: "totalProducts",
   },

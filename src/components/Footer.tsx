@@ -8,7 +8,7 @@ export const Footer = () => {
         <div className="grid md:grid-cols-4 gap-8 mb-12">
           <div>
             <div className="flex items-center mb-4">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center mr-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-gray-500 to-cyan-500 rounded-lg flex items-center justify-center mr-3">
                 <ShoppingCart className="h-6 w-6 text-white" />
               </div>
               <span className="text-2xl font-bold">OrderMe</span>

@@ -172,7 +172,7 @@ export const OrderTracking: React.FC<OrderTrackingProps> = ({ orderId }) => {
             </div>
             <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
               <motion.div
-                className="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full"
+                className="bg-gradient-to-r from-gray-500 to-cyan-500 h-2 rounded-full"
                 initial={{ width: 0 }}
                 animate={{
                   width: `${getStatusProgress(order.currentStatus)}%`,

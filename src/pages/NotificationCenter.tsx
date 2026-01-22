@@ -188,7 +188,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
             <div className="p-6 border-b border-gray-200/50 dark:border-gray-700/50">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
+                  <div className="w-10 h-10 bg-gradient-to-r from-gray-500 to-gray-700 rounded-xl flex items-center justify-center">
                     <Bell className="w-5 h-5 text-white" />
                   </div>
                   <div>
@@ -341,7 +341,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                         exit="exit"
                         layout
                         className={`relative border-l-4 rounded-lg p-4 ${getPriorityColor(
-                          notification.priority
+                          notification.priority,
                         )} ${
                           !notification.read
                             ? "bg-white dark:bg-gray-800 shadow-sm"
@@ -372,7 +372,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                                       <span className="text-xs font-medium text-green-600 dark:text-green-400">
                                         $
                                         {notification.metadata.amount.toFixed(
-                                          2
+                                          2,
                                         )}
                                       </span>
                                     )}
@@ -438,8 +438,8 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                                     notification.priority === "urgent"
                                       ? "destructive"
                                       : notification.priority === "high"
-                                      ? "default"
-                                      : "secondary"
+                                        ? "default"
+                                        : "secondary"
                                   }
                                   className="text-xs"
                                 >

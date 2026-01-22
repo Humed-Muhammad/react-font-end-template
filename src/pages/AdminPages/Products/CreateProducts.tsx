@@ -130,7 +130,7 @@ const productValidationSchema = Yup.object({
       function (value) {
         const { price } = this.parent;
         return !value || value >= price;
-      }
+      },
     ),
   costPrice: Yup.number()
     .min(0, "Cost price must be positive")
@@ -145,7 +145,7 @@ const productValidationSchema = Yup.object({
   seoTitle: Yup.string().max(60, "SEO title should be under 60 characters"),
   seoDescription: Yup.string().max(
     160,
-    "SEO description should be under 160 characters"
+    "SEO description should be under 160 characters",
   ),
 });
 
@@ -327,7 +327,7 @@ export const CreateProductPage: React.FC = () => {
         <motion.div variants={itemVariants} className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-600 to-gray-700 bg-clip-text text-transparent">
                 Create New Product
               </h1>
               <p className="text-gray-600 dark:text-gray-300 mt-2">
@@ -643,7 +643,7 @@ export const CreateProductPage: React.FC = () => {
                                       size="sm"
                                       onClick={() => {
                                         const input = document.querySelector(
-                                          'input[placeholder="Add a tag"]'
+                                          'input[placeholder="Add a tag"]',
                                         ) as HTMLInputElement;
                                         const value = input?.value.trim();
                                         if (
@@ -1089,7 +1089,7 @@ export const CreateProductPage: React.FC = () => {
                                             generateBarcode();
                                           setFieldValue(
                                             "barcode",
-                                            generatedBarcode
+                                            generatedBarcode,
                                           );
                                         }}
                                         className=" h-8 px-3 text-xs"
@@ -1121,7 +1121,7 @@ export const CreateProductPage: React.FC = () => {
                                                     });
                                                   window.open(
                                                     `/barcode?${params.toString()}`,
-                                                    "_blank"
+                                                    "_blank",
                                                   );
                                                 }}
                                                 variant="outline"
@@ -1153,7 +1153,7 @@ export const CreateProductPage: React.FC = () => {
                                                     });
                                                   window.open(
                                                     `/qrcode?${params.toString()}`,
-                                                    "_blank"
+                                                    "_blank",
                                                   );
                                                 }}
                                                 variant="outline"
@@ -1306,7 +1306,7 @@ export const CreateProductPage: React.FC = () => {
                                   onCheckedChange={(checked) =>
                                     setFieldValue(
                                       "inventory.trackQuantity",
-                                      checked
+                                      checked,
                                     )
                                   }
                                 />
@@ -1366,7 +1366,7 @@ export const CreateProductPage: React.FC = () => {
                                   onCheckedChange={(checked) =>
                                     setFieldValue(
                                       "inventory.allowBackOrder",
-                                      checked
+                                      checked,
                                     )
                                   }
                                 />
@@ -1415,7 +1415,7 @@ export const CreateProductPage: React.FC = () => {
                                       setFieldValue("isDigital", checked);
                                       setFieldValue(
                                         "requiresShipping",
-                                        !checked
+                                        !checked,
                                       );
                                     }}
                                   />
@@ -1449,7 +1449,7 @@ export const CreateProductPage: React.FC = () => {
                                         onCheckedChange={(checked) =>
                                           setFieldValue(
                                             "requiresShipping",
-                                            checked
+                                            checked,
                                           )
                                         }
                                       />
@@ -1581,7 +1581,7 @@ export const CreateProductPage: React.FC = () => {
                                             onValueChange={(value) =>
                                               setFieldValue(
                                                 "dimensions.unit",
-                                                value
+                                                value,
                                               )
                                             }
                                           >
@@ -1786,7 +1786,7 @@ export const CreateProductPage: React.FC = () => {
                                             </button>
                                           </Badge>
                                         </motion.div>
-                                      )
+                                      ),
                                     )}
                                   </div>
                                   <div className="flex space-x-2">
@@ -1817,7 +1817,7 @@ export const CreateProductPage: React.FC = () => {
                                       size="sm"
                                       onClick={() => {
                                         const input = document.querySelector(
-                                          'input[placeholder="Add SEO keyword"]'
+                                          'input[placeholder="Add SEO keyword"]',
                                         ) as HTMLInputElement;
                                         const value = input?.value.trim();
                                         if (
@@ -2026,7 +2026,7 @@ export const CreateProductPage: React.FC = () => {
                                         onChange={(e) =>
                                           setFieldValue(
                                             `customFields.${index}.name`,
-                                            e.target.value
+                                            e.target.value,
                                           )
                                         }
                                         className="flex-1"
@@ -2037,7 +2037,7 @@ export const CreateProductPage: React.FC = () => {
                                         onChange={(e) =>
                                           setFieldValue(
                                             `customFields.${index}.value`,
-                                            e.target.value
+                                            e.target.value,
                                           )
                                         }
                                         className="flex-1"
@@ -2089,7 +2089,7 @@ export const CreateProductPage: React.FC = () => {
                       handleSubmit();
                     }}
                     disabled={isSubmitting || !isValid}
-                    className="flex-1 h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium"
+                    className="flex-1 h-12 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-blue-700 hover:to-purple-700 text-white font-medium"
                   >
                     {isSubmitting ? (
                       <>

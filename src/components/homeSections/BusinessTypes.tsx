@@ -32,7 +32,7 @@ const businessTypes = [
     icon: <Store className="h-6 w-6" />,
     name: "Retail",
     description: "E-commerce & in-store sales",
-    color: "from-blue-500 to-cyan-500",
+    color: "from-gray-500 to-cyan-500",
   },
   {
     icon: <Coffee className="h-6 w-6" />,

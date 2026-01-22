@@ -77,7 +77,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4 flex-1">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold">
+                <div className="w-12 h-12 bg-gradient-to-br from-gray-500 to-gray-700 rounded-xl flex items-center justify-center text-white font-bold">
                   #{order.id?.slice(-4)}
                 </div>
 
@@ -171,12 +171,12 @@ export const OrderCard: React.FC<OrderCardProps> = ({
       onClick={onSelect}
     >
       <Card className="bg-white dark:bg-gray-800 border-0 shadow hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden">
-        <div className="h-2 bg-gradient-to-r from-blue-500 to-purple-600" />
+        <div className="h-2 bg-gradient-to-r from-gray-500 to-gray-700" />
 
         <CardContent className="p-6">
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+              <div className="w-10 h-10 bg-gradient-to-br from-gray-500 to-gray-700 rounded-lg flex items-center justify-center text-white font-bold text-sm">
                 #{order.id?.slice(-4)}
               </div>
               <div>

@@ -247,7 +247,7 @@ export const Dashboard: React.FC = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+              <Button className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-blue-700 hover:to-purple-700">
                 <Plus className="w-4 h-4 mr-2" />
                 New Order
               </Button>
@@ -272,7 +272,7 @@ export const Dashboard: React.FC = () => {
                 value: analytics.totalOrders.toString(),
                 change: analytics.ordersChange,
                 icon: ShoppingCart,
-                color: "from-blue-500 to-cyan-500",
+                color: "from-gray-500 to-cyan-500",
               },
               {
                 title: "Active Customers",
@@ -355,7 +355,7 @@ export const Dashboard: React.FC = () => {
                   </DropdownMenu>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-64 flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-700 dark:to-gray-600 rounded-lg">
+                  <div className="h-64 flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 dark:to-gray-700 dark:to-gray-600 rounded-lg">
                     <div className="text-center">
                       <BarChart3 className="w-12 h-12 text-blue-500 mx-auto mb-2" />
                       <p className="text-gray-600 dark:text-gray-300">
@@ -593,7 +593,7 @@ export const Dashboard: React.FC = () => {
 
           {/* Action Items */}
           <motion.div variants={itemVariants}>
-            <Card className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 dark:from-blue-500/5 dark:to-purple-500/5 backdrop-blur-sm border-0 shadow-lg">
+            <Card className="bg-gradient-to-r from-gray-500/10 to-gray-700/10 dark:from-gray-500/5 dark:to-gray-700/5 backdrop-blur-sm border-0 shadow-lg">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold flex items-center">
                   <Zap className="w-5 h-5 mr-2 text-yellow-500" />
@@ -611,7 +611,7 @@ export const Dashboard: React.FC = () => {
                     {
                       label: "View Analytics",
                       icon: BarChart3,
-                      color: "from-blue-500 to-cyan-500",
+                      color: "from-gray-500 to-cyan-500",
                     },
                     {
                       label: "Manage Staff",

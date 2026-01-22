@@ -93,7 +93,7 @@ export const Navbar: React.FC = () => {
               transition={{ duration: 0.6 }}
               className="relative"
             >
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-blue-500/25 transition-all duration-300">
+              <div className="w-10 h-10 bg-gradient-to-r from-gray-600 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-blue-500/25 transition-all duration-300">
                 <ShoppingCart className="h-6 w-6 text-white" />
               </div>
               <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center">
@@ -151,8 +151,8 @@ export const Navbar: React.FC = () => {
                                           feature.badge === "New"
                                             ? "default"
                                             : feature.badge === "Popular"
-                                            ? "secondary"
-                                            : "outline"
+                                              ? "secondary"
+                                              : "outline"
                                         }
                                         className="text-xs"
                                       >
@@ -195,7 +195,7 @@ export const Navbar: React.FC = () => {
                                 className="group relative flex  flex-row items-center p-4 rounded-xl hover:bg-gradient-to-r hover:from-slate-50 hover:to-blue-50/50 dark:hover:from-slate-800 dark:hover:to-blue-900/20 transition-all duration-300 border border-transparent hover:border-blue-100 dark:hover:border-blue-800/30 hover:shadow-lg hover:shadow-blue-500/10"
                               >
                                 {/* Animated background gradient */}
-                                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/0 to-cyan-500/0 group-hover:from-blue-500/5 group-hover:to-cyan-500/5 transition-all duration-300" />
+                                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-gray-500/0 to-cyan-500/0 group-hover:from-gray-500/5 group-hover:to-cyan-500/5 transition-all duration-300" />
 
                                 {/* Icon container with enhanced styling */}
                                 <div className="relative p-3 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600 text-slate-600 dark:text-slate-300 group-hover:from-blue-100 group-hover:to-cyan-100 dark:group-hover:from-blue-900/50 dark:group-hover:to-cyan-900/50 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-blue-500/20">
@@ -216,7 +216,7 @@ export const Navbar: React.FC = () => {
 
                                 {/* Subtle arrow indicator */}
                                 <div className="relative ml-2 opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-1 transition-all duration-300">
-                                  <div className="w-5 h-5 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center">
+                                  <div className="w-5 h-5 rounded-full bg-gradient-to-r from-gray-500 to-cyan-500 flex items-center justify-center">
                                     <svg
                                       className="w-3 h-3 text-white"
                                       fill="none"
@@ -234,7 +234,7 @@ export const Navbar: React.FC = () => {
                                 </div>
 
                                 {/* Animated border effect */}
-                                <div className="absolute inset-0 rounded-xl border-2 border-transparent group-hover:border-gradient-to-r group-hover:from-blue-500/20 group-hover:to-cyan-500/20 transition-all duration-300" />
+                                <div className="absolute inset-0 rounded-xl border-2 border-transparent group-hover:border-gradient-to-r group-hover:from-gray-500/20 group-hover:to-cyan-500/20 transition-all duration-300" />
                               </Link>
                             </NavigationMenuLink>
                           </motion.div>
@@ -388,7 +388,7 @@ export const Navbar: React.FC = () => {
                         src={user.photoURL || ""}
                         alt={user.displayName || ""}
                       />
-                      <AvatarFallback className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white">
+                      <AvatarFallback className="bg-gradient-to-r from-gray-500 to-cyan-500 text-white">
                         {getUserInitials(user.name)}
                       </AvatarFallback>
                     </Avatar>
@@ -450,7 +450,7 @@ export const Navbar: React.FC = () => {
                 </Button>
                 <Button
                   asChild
-                  className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
+                  className="bg-gradient-to-r from-gray-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
                 >
                   <Link to="/signup">
                     <Rocket className="h-4 w-4 mr-2" />
