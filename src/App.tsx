@@ -25,6 +25,8 @@ import { BarcodePage } from "./pages/BarcodePage";
 import { QRCodePage } from "./pages/QRCodePage";
 import { Orders } from "./pages/AdminPages/Orders/Orders";
 import { LoadingComponent } from "./components/shared/LoadingComponent";
+import { CreateOrder } from "./pages/AdminPages/Orders/CreateOrder";
+import { Toaster } from "./components/ui/sonner";
 
 const App: React.FC = () => {
   const { user, isFetchingUser } = useAuth();
@@ -35,6 +37,7 @@ const App: React.FC = () => {
 
   return (
     <BrowserRouter>
+      <Toaster richColors position="top-right" />
       <Routes>
         {/* Public Routes */}
         <Route
@@ -98,6 +101,17 @@ const App: React.FC = () => {
               allowedUserTypes={["service_owner", "product_owner", "admin"]}
             >
               <Orders />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/orders/new"
+          element={
+            <ProtectedRoute
+              allowedUserTypes={["service_owner", "product_owner", "admin"]}
+            >
+              <CreateOrder />
             </ProtectedRoute>
           }
         />

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Filter,
@@ -129,6 +130,11 @@ export const OrderList: React.FC<OrderListProps> = ({
           <p className="text-gray-600 dark:text-gray-400 mt-1">
             Manage and track all your orders
           </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Link to="/orders/new">
+            <Button>Create Order</Button>
+          </Link>
         </div>
       </div>
 

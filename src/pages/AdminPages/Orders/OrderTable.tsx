@@ -93,7 +93,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
   const formatCurrency = (amount: number, currency: string) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: currency || "USD",
+      currency: currency || "ETB",
     }).format(amount);
   };
 

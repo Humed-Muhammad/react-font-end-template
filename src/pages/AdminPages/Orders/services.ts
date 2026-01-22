@@ -25,7 +25,7 @@ export const orderServices = rootServiceApi.injectEndpoints({
     }),
     createOrder: build.mutation<Order, unknown>({
       query: (order) => ({
-        url: "/orders",
+        url: "/orders/create",
         method: "POST",
         data: order,
       }),
