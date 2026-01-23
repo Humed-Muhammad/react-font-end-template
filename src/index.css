@@ -118,3 +118,22 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Globally hide scrollbar indicators across browsers */
+@layer base {
+  * {
+    -ms-overflow-style: none; /* IE and old Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  *::-webkit-scrollbar {
+    width: 0px;
+    height: 0px; /* Chrome, Safari, Opera */
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border: none;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}

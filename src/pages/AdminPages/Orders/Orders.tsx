@@ -4,7 +4,8 @@ import { OrderList } from "./OrderList";
 import type { Order } from "@/types";
 import { LoadingComponent } from "@/components/shared/LoadingComponent";
 import { AdminDashboardNav } from "@/components/AdminDashboardNav";
-import { useGetOrdersQuery } from "./services";
+import { useGetOrdersQuery, useUpdateOrderMutation } from "./services";
+import { toast } from "sonner";
 
 export const Orders: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -15,6 +16,14 @@ export const Orders: React.FC = () => {
     page: 1,
     perPage: 10,
   });
+
+  useEffect(() => {
+    if (data?.items) {
+      setOrders(data.items);
+    }
+  }, [data]);
+
+  const [updateOrder] = useUpdateOrderMutation();
 
   const handleOrderSelect = (order: Partial<Order>) => {
     console.log("Order selected:", order);
@@ -38,6 +47,38 @@ export const Orders: React.FC = () => {
     } catch (err) {
       console.error("Error deleting order:", err);
       setError("Failed to delete order");
+    }
+  };
+
+  const handleUpdateStatus = async (
+    orderId: string,
+    status: Order["status"],
+  ) => {
+    try {
+      await updateOrder({ orderId, order: { status } }).unwrap();
+      setOrders((prev) =>
+        prev.map((o) => (o.id === orderId ? { ...o, status } : o)),
+      );
+      toast.success("Order status updated");
+    } catch (e) {
+      console.error(e);
+      toast.error("Failed to update order status");
+    }
+  };
+
+  const handleUpdatePaymentStatus = async (
+    orderId: string,
+    paymentStatus: Order["paymentStatus"],
+  ) => {
+    try {
+      await updateOrder({ orderId, order: { paymentStatus } }).unwrap();
+      setOrders((prev) =>
+        prev.map((o) => (o.id === orderId ? { ...o, paymentStatus } : o)),
+      );
+      toast.success("Payment status updated");
+    } catch (e) {
+      console.error(e);
+      toast.error("Failed to update payment status");
     }
   };
 
@@ -68,10 +109,12 @@ export const Orders: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Order List */}
         <OrderList
-          orders={data?.items ?? []}
+          orders={orders}
           onOrderSelect={handleOrderSelect}
           onOrderEdit={handleOrderEdit}
           onOrderDelete={handleOrderDelete}
+          onUpdateStatus={handleUpdateStatus}
+          onUpdatePaymentStatus={handleUpdatePaymentStatus}
         />
       </div>
     </div>

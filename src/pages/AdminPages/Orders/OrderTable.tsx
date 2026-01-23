@@ -65,6 +65,11 @@ interface OrderTableProps {
   onEdit: (order: Partial<Order>) => void;
   onDelete: (order: Partial<Order>) => void;
   onBulkAction?: (selectedOrders: string[], action: string) => void;
+  onUpdateStatus: (orderId: string, status: Order["status"]) => void;
+  onUpdatePaymentStatus: (
+    orderId: string,
+    paymentStatus: Order["paymentStatus"],
+  ) => void;
   loading?: boolean;
   searchQuery?: string;
   onSearchChange?: (query: string) => void;
@@ -78,6 +83,8 @@ export const OrderTable: React.FC<OrderTableProps> = ({
   onEdit,
   onDelete,
   onBulkAction,
+  onUpdateStatus,
+  onUpdatePaymentStatus,
   loading = false,
   searchQuery = "",
   onSearchChange,
@@ -195,6 +202,22 @@ export const OrderTable: React.FC<OrderTableProps> = ({
     if (hoursDiff > 1) return "border-l-yellow-500";
     return "border-l-green-500";
   };
+
+  const statusOptions: Order["status"][] = [
+    "pending",
+    "preparing",
+    "ready",
+    "delivering",
+    "delivered",
+    "cancelled",
+  ];
+
+  const paymentOptions: Order["paymentStatus"][] = [
+    "unpaid",
+    "paid",
+    "refunded",
+    "partially_paid",
+  ];
 
   return (
     <TooltipProvider>
@@ -512,16 +535,41 @@ export const OrderTable: React.FC<OrderTableProps> = ({
 
                         <TableCell>
                           <div className="space-y-2">
-                            <Badge
-                              className={`${
-                                statusConfig[order.status!]?.color
-                              } border-0 shadow-sm`}
-                            >
-                              <StatusIcon className="h-3 w-3 mr-1.5" />
-                              {`${
-                                order.status?.charAt(0).toUpperCase() ?? ""
-                              }${order.status?.slice(1)}`}
-                            </Badge>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className={`px-0 hover:bg-transparent`}
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <Badge
+                                    className={`${
+                                      statusConfig[order.status!]?.color
+                                    } border-0 shadow-sm`}
+                                  >
+                                    <StatusIcon className="h-3 w-3 mr-1.5" />
+                                    {`${
+                                      order.status?.charAt(0).toUpperCase() ??
+                                      ""
+                                    }${order.status?.slice(1)}`}
+                                  </Badge>
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="start">
+                                {statusOptions.map((s) => (
+                                  <DropdownMenuItem
+                                    key={s}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      onUpdateStatus(order.id!, s);
+                                    }}
+                                  >
+                                    {s.replace("_", " ")}
+                                  </DropdownMenuItem>
+                                ))}
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                             <div className="w-full">
                               <Progress
                                 value={getStatusProgress(order.status!)}
@@ -533,18 +581,47 @@ export const OrderTable: React.FC<OrderTableProps> = ({
 
                         <TableCell>
                           <div className="space-y-1">
-                            <Badge
-                              variant="outline"
-                              className={`${
-                                paymentStatusConfig[order.paymentStatus!]?.color
-                              } shadow-sm`}
-                            >
-                              <PaymentIcon className="h-3 w-3 mr-1.5" />
-                              {`${
-                                order.paymentStatus?.charAt(0)?.toUpperCase() ??
-                                ""
-                              }${order.paymentStatus?.slice(1)}`}
-                            </Badge>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="px-0 hover:bg-transparent"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <Badge
+                                    variant="outline"
+                                    className={`${
+                                      paymentStatusConfig[order.paymentStatus!]
+                                        ?.color
+                                    } shadow-sm`}
+                                  >
+                                    <PaymentIcon className="h-3 w-3 mr-1.5" />
+                                    {`${
+                                      order.paymentStatus
+                                        ?.replace("_", " ")
+                                        .charAt(0)
+                                        ?.toUpperCase() ?? ""
+                                    }${order.paymentStatus
+                                      ?.replace("_", " ")
+                                      .slice(1)}`}
+                                  </Badge>
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="start">
+                                {paymentOptions.map((p) => (
+                                  <DropdownMenuItem
+                                    key={p}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      onUpdatePaymentStatus(order.id!, p);
+                                    }}
+                                  >
+                                    {p.replace("_", " ")}
+                                  </DropdownMenuItem>
+                                ))}
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                             {order.paymentMethod && (
                               <div className="flex items-center gap-1 text-xs text-gray-500">
                                 <CreditCard className="w-3 h-3" />

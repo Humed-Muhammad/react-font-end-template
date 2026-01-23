@@ -22,6 +22,11 @@ interface OrderListProps {
   onOrderSelect: (order: Partial<Order>) => void;
   onOrderEdit: (order: Partial<Order>) => void;
   onOrderDelete: (orderId: string) => void;
+  onUpdateStatus: (orderId: string, status: Order["status"]) => void;
+  onUpdatePaymentStatus: (
+    orderId: string,
+    paymentStatus: Order["paymentStatus"],
+  ) => void;
 }
 
 export const OrderList: React.FC<OrderListProps> = ({
@@ -29,6 +34,8 @@ export const OrderList: React.FC<OrderListProps> = ({
   onOrderSelect,
   onOrderEdit,
   onOrderDelete,
+  onUpdateStatus,
+  onUpdatePaymentStatus,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
@@ -77,7 +84,7 @@ export const OrderList: React.FC<OrderListProps> = ({
       color: "bg-gray-100 text-gray-800 border-gray-200",
       icon: XCircle,
     },
-    partial: {
+    partially_paid: {
       color: "bg-yellow-100 text-yellow-800 border-yellow-200",
       icon: DollarSign,
     },
@@ -162,6 +169,8 @@ export const OrderList: React.FC<OrderListProps> = ({
             onSelect={(order) => onOrderSelect(order)}
             onEdit={(order) => onOrderEdit(order)}
             onDelete={(order) => onOrderDelete(order.id as string)}
+            onUpdateStatus={onUpdateStatus}
+            onUpdatePaymentStatus={onUpdatePaymentStatus}
           />
         </AnimatePresence>
       </div>
