@@ -1,3 +1,4 @@
+import { apiPath } from "@/constant";
 import { format } from "date-fns";
 
 type Options = {
@@ -12,4 +13,16 @@ export const dateFormatter = ({ date, formatType = "PP" }: Options) => {
     console.log(error);
     return null;
   }
+};
+
+export const getImage = ({
+  imageName,
+  collectionName,
+  recordId,
+}: {
+  imageName: string;
+  collectionName: string;
+  recordId: string;
+}) => {
+  return `${apiPath}/api/files/${collectionName}/${recordId}/${imageName}`;
 };

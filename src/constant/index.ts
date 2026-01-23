@@ -58,4 +58,5 @@ export const collectionNames = {
   PRODUCTS: "products",
   PRODUCT_CATEGORIES: "product_categories",
   PRODUCT_INVENTORY: "product_inventory",
+  MESSAGES: "messages",
 };

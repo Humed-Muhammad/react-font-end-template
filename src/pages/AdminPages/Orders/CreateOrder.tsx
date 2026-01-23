@@ -25,6 +25,10 @@ import { useGetAdminProductsQuery } from "../Products/service";
 import type { Product } from "@/types";
 import { Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { getImage } from "@/utils/utils";
+import { Avatar } from "@/components/ui/avatar";
+import { AvatarImage } from "@radix-ui/react-avatar";
+import { collectionNames } from "@/constant";
 
 type CartItem = {
   product: Product;
@@ -44,6 +48,7 @@ export const CreateOrder: React.FC = () => {
     email: "",
     phone: "",
     address: "",
+    shippingAddress: "",
   });
 
   const [paymentMethod, setPaymentMethod] = useState<string>("cash");
@@ -131,7 +136,8 @@ export const CreateOrder: React.FC = () => {
       deliveryFee: shipping || 0,
       currency: "ETB",
       totalAmount: total,
-      shippingAddress: { address: customer.address },
+      shippingAddress: { address: customer.shippingAddress },
+      deliveryAddress: { address: customer.address },
       billingAddress: { address: customer.address },
       notes,
       items: cart.map((c) => ({
@@ -219,10 +225,24 @@ export const CreateOrder: React.FC = () => {
                         key={p.id}
                         className="border rounded-md p-3 flex items-center justify-between bg-white/70 dark:bg-gray-800/60"
                       >
-                        <div>
-                          <div className="font-medium">{p.name}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {p.sku} • {currency(p.price)}
+                        <div className="flex items-center gap-10">
+                          {p.images?.[0] && (
+                            <Avatar className="h-14 w-14">
+                              <AvatarImage
+                                src={getImage({
+                                  imageName: p.images[0],
+                                  collectionName: collectionNames.PRODUCTS,
+                                  recordId: p.id,
+                                })}
+                                alt="User"
+                              />
+                            </Avatar>
+                          )}
+                          <div>
+                            <div className="font-medium">{p.name}</div>
+                            <div className="text-xs text-muted-foreground">
+                              {p.sku} • {currency(p.price)}
+                            </div>
                           </div>
                         </div>
                         <Button
@@ -268,7 +288,21 @@ export const CreateOrder: React.FC = () => {
                       {cart.map((c) => (
                         <TableRow key={c.product.id}>
                           <TableCell className="max-w-[220px] truncate">
-                            {c.product.name}
+                            <div className="flex items-center gap-2">
+                              {c.product.images?.[0] && (
+                                <Avatar className="h-12 w-12">
+                                  <AvatarImage
+                                    src={getImage({
+                                      imageName: c.product.images[0],
+                                      collectionName: collectionNames.PRODUCTS,
+                                      recordId: c.product.id,
+                                    })}
+                                    alt={c.product.name}
+                                  />
+                                </Avatar>
+                              )}
+                              {c.product.name}
+                            </div>
                           </TableCell>
                           <TableCell>{currency(c.product.price)}</TableCell>
                           <TableCell>
@@ -346,7 +380,7 @@ export const CreateOrder: React.FC = () => {
                   }
                 />
                 <Input
-                  placeholder="Address (for shipping/billing)"
+                  placeholder="Address (for delivery)"
                   value={customer.address}
                   onChange={(e) =>
                     setCustomer((s) => ({ ...s, address: e.target.value }))

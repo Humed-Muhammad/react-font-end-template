@@ -9,7 +9,6 @@ import { SignupPage } from "./pages/SignupPage";
 import LegalPage from "./pages/LegalPage";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/Login";
-import { OrderTracking } from "./pages/OrderTracking";
 import { Unauthorized } from "./pages/Unauthorized";
 
 // Protected pages
@@ -27,6 +26,7 @@ import { Orders } from "./pages/AdminPages/Orders/Orders";
 import { LoadingComponent } from "./components/shared/LoadingComponent";
 import { CreateOrder } from "./pages/AdminPages/Orders/CreateOrder";
 import { Toaster } from "./components/ui/sonner";
+import OrderTrackingPage from "./pages/OrderTrackingPage";
 
 const App: React.FC = () => {
   const { user, isFetchingUser } = useAuth();
@@ -79,7 +79,7 @@ const App: React.FC = () => {
         {/* Public Order Tracking - accessible to all */}
         <Route
           path="/order-tracking/:orderId?"
-          element={<OrderTracking orderId="1" />}
+          element={<OrderTrackingPage />}
         />
 
         {/* Owner/Admin Dashboard Routes */}

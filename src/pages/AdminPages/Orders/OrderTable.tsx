@@ -57,6 +57,7 @@ import { Progress } from "@/components/ui/progress";
 import type { Order } from "@/types";
 import { dateFormatter } from "@/utils/utils";
 import { LoadingCircle } from "@/components/icons";
+import { Link } from "react-router-dom";
 
 interface OrderTableProps {
   orders: Partial<Order>[];
@@ -742,10 +743,12 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                                 <Edit className="h-4 w-4 text-green-500" />
                                 Edit Order
                               </DropdownMenuItem>
-                              <DropdownMenuItem className="gap-2 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors">
-                                <Package className="h-4 w-4 text-purple-500" />
-                                Track Package
-                              </DropdownMenuItem>
+                              <Link to={`/order-tracking/${order.id}`}>
+                                <DropdownMenuItem className="gap-2 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors">
+                                  <Package className="h-4 w-4 text-purple-500" />
+                                  Track Status
+                                </DropdownMenuItem>
+                              </Link>
                               <DropdownMenuItem className="gap-2 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors">
                                 <Download className="h-4 w-4 text-orange-500" />
                                 Download Receipt
