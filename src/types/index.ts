@@ -129,6 +129,7 @@ export interface Order {
   deliveryFee: number;
   status:
     | "pending"
+    | "confirmed"
     | "preparing"
     | "ready"
     | "delivering"

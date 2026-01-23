@@ -10,6 +10,7 @@ import {
   XCircle,
   AlertCircle,
   DollarSign,
+  CheckCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { OrderCard } from "./OrderCard";
@@ -19,6 +20,7 @@ import { OrderTable } from "./OrderTable";
 
 interface OrderListProps {
   orders: Partial<Order>[];
+  isFetching?: boolean;
   onOrderSelect: (order: Partial<Order>) => void;
   onOrderEdit: (order: Partial<Order>) => void;
   onOrderDelete: (orderId: string) => void;
@@ -27,15 +29,18 @@ interface OrderListProps {
     orderId: string,
     paymentStatus: Order["paymentStatus"],
   ) => void;
+  refetchOrders: () => void;
 }
 
 export const OrderList: React.FC<OrderListProps> = ({
   orders,
+  isFetching,
   onOrderSelect,
   onOrderEdit,
   onOrderDelete,
   onUpdateStatus,
   onUpdatePaymentStatus,
+  refetchOrders,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
@@ -48,6 +53,10 @@ export const OrderList: React.FC<OrderListProps> = ({
     pending: {
       color: "bg-yellow-100 text-yellow-800 border-yellow-200",
       icon: Clock,
+    },
+    confirmed: {
+      color: "bg-indigo-100 text-teal-800 border-teal-200",
+      icon: CheckCheck,
     },
     preparing: {
       color: "bg-blue-100 text-blue-800 border-blue-200",
@@ -171,6 +180,8 @@ export const OrderList: React.FC<OrderListProps> = ({
             onDelete={(order) => onOrderDelete(order.id as string)}
             onUpdateStatus={onUpdateStatus}
             onUpdatePaymentStatus={onUpdatePaymentStatus}
+            refetchOrders={refetchOrders}
+            isFetching={isFetching}
           />
         </AnimatePresence>
       </div>

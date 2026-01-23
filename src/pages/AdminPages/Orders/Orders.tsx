@@ -12,7 +12,12 @@ export const Orders: React.FC = () => {
   const [orders, setOrders] = useState<Partial<Order>[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const { data, isLoading } = useGetOrdersQuery({
+  const {
+    data,
+    isLoading,
+    isFetching,
+    refetch: refetchOrders,
+  } = useGetOrdersQuery({
     page: 1,
     perPage: 10,
   });
@@ -115,6 +120,8 @@ export const Orders: React.FC = () => {
           onOrderDelete={handleOrderDelete}
           onUpdateStatus={handleUpdateStatus}
           onUpdatePaymentStatus={handleUpdatePaymentStatus}
+          refetchOrders={refetchOrders}
+          isFetching={isFetching}
         />
       </div>
     </div>

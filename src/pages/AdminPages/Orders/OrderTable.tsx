@@ -56,6 +56,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import type { Order } from "@/types";
 import { dateFormatter } from "@/utils/utils";
+import { LoadingCircle } from "@/components/icons";
 
 interface OrderTableProps {
   orders: Partial<Order>[];
@@ -71,8 +72,10 @@ interface OrderTableProps {
     paymentStatus: Order["paymentStatus"],
   ) => void;
   loading?: boolean;
+  isFetching?: boolean;
   searchQuery?: string;
   onSearchChange?: (query: string) => void;
+  refetchOrders: () => void;
 }
 
 export const OrderTable: React.FC<OrderTableProps> = ({
@@ -85,7 +88,9 @@ export const OrderTable: React.FC<OrderTableProps> = ({
   onBulkAction,
   onUpdateStatus,
   onUpdatePaymentStatus,
+  refetchOrders,
   loading = false,
+  isFetching,
   searchQuery = "",
   onSearchChange,
 }) => {
@@ -205,6 +210,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
 
   const statusOptions: Order["status"][] = [
     "pending",
+    "confirmed",
     "preparing",
     "ready",
     "delivering",
@@ -241,8 +247,17 @@ export const OrderTable: React.FC<OrderTableProps> = ({
           </div>
 
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" className="gap-2">
-              <RefreshCw className="w-4 h-4" />
+            <Button
+              onClick={refetchOrders}
+              variant="outline"
+              size="sm"
+              className="gap-2"
+            >
+              {isFetching ? (
+                <LoadingCircle />
+              ) : (
+                <RefreshCw className="w-4 h-4" />
+              )}
               Refresh
             </Button>
             <Button variant="outline" size="sm" className="gap-2">
