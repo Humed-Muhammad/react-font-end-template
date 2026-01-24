@@ -8,9 +8,7 @@ import {
   Package,
   Truck,
   XCircle,
-  Loader2,
   CheckCheck,
-  Construction,
   Hammer,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -150,7 +148,7 @@ export default function OrderTrackingPage(): JSX.Element {
     () =>
       currentIndex < 0
         ? 0
-        : Math.round((currentIndex / VISIBLE_STATUS_ORDER.length) * 100),
+        : Math.round(((currentIndex + 1) / VISIBLE_STATUS_ORDER.length) * 100),
     [currentIndex],
   );
 
@@ -220,9 +218,9 @@ export default function OrderTrackingPage(): JSX.Element {
 
                     <motion.div
                       initial={{ height: 0 }}
-                      animate={{ height: `${progressPercent}%` }}
+                      animate={{ height: `${progressPercent - 10}%` }}
                       transition={{ duration: 0.6, ease: "easeInOut" }}
-                      className="absolute left-1/2 transform -translate-x-1/2 bottom-6 w-0.5 bg-gradient-to-b from-emerald-400 to-emerald-600 rounded"
+                      className="absolute top-0 left-1/2 transform -translate-x-1/2 bottom-6 w-0.5 bg-gradient-to-b from-emerald-400 to-emerald-600 rounded"
                     />
 
                     <div className="space-y-6 w-full">
