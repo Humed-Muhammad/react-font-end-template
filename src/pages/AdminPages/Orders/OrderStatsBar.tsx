@@ -8,17 +8,19 @@ import {
   Bike,
   ChefHat,
   PackageCheck,
+  CheckCheck,
 } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+// import {
+//   Tooltip,
+//   TooltipContent,
+//   TooltipTrigger,
+// } from "@/components/ui/tooltip";
 
 interface OrderStats {
   total: number;
   pending: number;
-  processing: number;
+  confirmed: number;
+  preparing: number;
   ready?: number;
   delivering?: number;
   delivered: number;
@@ -45,13 +47,22 @@ export const OrderStatsBar: React.FC<OrderStatsBarProps> = ({
       percentage: stats.total > 0 ? (stats.pending / stats.total) * 100 : 0,
     },
     {
+      label: "Confirmed",
+      value: stats.confirmed,
+      color: "bg-teal-400",
+      bgColor: "bg-teal-50 dark:bg-teal-900/10",
+      textColor: "text-teal-700 dark:text-teal-400",
+      icon: CheckCheck,
+      percentage: stats.total > 0 ? (stats.confirmed / stats.total) * 100 : 0,
+    },
+    {
       label: "Preparing",
-      value: stats.processing,
+      value: stats.preparing,
       color: "bg-blue-400",
       bgColor: "bg-blue-50 dark:bg-blue-900/10",
       textColor: "text-blue-700 dark:text-blue-400",
       icon: ChefHat,
-      percentage: stats.total > 0 ? (stats.processing / stats.total) * 100 : 0,
+      percentage: stats.total > 0 ? (stats.preparing / stats.total) * 100 : 0,
     },
     {
       label: "Ready",
@@ -152,7 +163,7 @@ export const OrderStatsBar: React.FC<OrderStatsBarProps> = ({
         </div>
 
         {/* Mini Progress Bar */}
-        <div className="mt-4">
+        {/* <div className="mt-4">
           <div className="flex h-1.5 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
             {statsData.map((stat, index) => (
               <Tooltip key={stat.label}>
@@ -175,7 +186,7 @@ export const OrderStatsBar: React.FC<OrderStatsBarProps> = ({
               </Tooltip>
             ))}
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

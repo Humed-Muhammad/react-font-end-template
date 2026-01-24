@@ -113,18 +113,19 @@ export const OrderList: React.FC<OrderListProps> = ({
   });
 
   const getOrderStats = () => {
-    const total = 39 | orders.length;
-    const pending = 7 | orders.filter((o) => o.status === "pending").length;
-    const preparing = 9 | orders.filter((o) => o.status === "preparing").length;
-    const ready = 8 | orders.filter((o) => o.status === "ready").length;
-    const delivering =
-      3 | orders.filter((o) => o.status === "delivering").length;
-    const delivered = 6 | orders.filter((o) => o.status === "delivered").length;
-    const cancelled = 6 | orders.filter((o) => o.status === "cancelled").length;
+    const total = orders.length;
+    const pending = orders.filter((o) => o.status === "pending").length;
+    const confirmed = orders.filter((o) => o.status === "confirmed").length;
+    const preparing = orders.filter((o) => o.status === "preparing").length;
+    const ready = orders.filter((o) => o.status === "ready").length;
+    const delivering = orders.filter((o) => o.status === "delivering").length;
+    const delivered = orders.filter((o) => o.status === "delivered").length;
+    const cancelled = orders.filter((o) => o.status === "cancelled").length;
 
     return {
       total,
       pending,
+      confirmed,
       preparing,
       ready,
       delivering,
@@ -155,18 +156,7 @@ export const OrderList: React.FC<OrderListProps> = ({
       </div>
 
       {/* Stats Cards */}
-      <OrderStatsBar
-        stats={{
-          total: stats.total,
-          pending: stats.pending,
-          processing: stats.preparing, // Note: mapping 'preparing' to 'processing' for consistency
-          ready: stats.ready,
-          delivering: stats.delivering,
-          delivered: stats.delivered,
-          cancelled: stats.cancelled,
-        }}
-        className="mb-6"
-      />
+      <OrderStatsBar stats={stats} className="mb-6" />
 
       {/* Orders Grid/List */}
       <div className="w-full">

@@ -10,6 +10,8 @@ import {
   XCircle,
   Loader2,
   CheckCheck,
+  Construction,
+  Hammer,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import type { Order } from "@/types";
@@ -18,7 +20,8 @@ import { useGetOrderQuery } from "@/pages/AdminPages/Orders/services";
 import { db } from "@/utils/pockatbase";
 import { collectionNames } from "@/constant";
 import CancelledOrderView from "@/components/CancelledOrderView";
-import MessageWidget from "@/components/MessageWidget";
+import ChatButton from "@/components/ChatButton";
+import ChatModal from "@/components/ChatModal";
 
 const STATUS_ORDER: Order["status"][] = [
   "pending",
@@ -57,7 +60,7 @@ const STATUS_META: Record<
   },
   preparing: {
     label: "Preparing",
-    icon: <Loader2 className="w-5 h-5" />,
+    icon: <Hammer className="w-5 h-5" />,
     color: "bg-blue-500",
   },
   ready: {
@@ -101,6 +104,42 @@ export default function OrderTrackingPage(): JSX.Element {
   }, [order?.status]);
 
   const isCancelled = simulatedStatus === "cancelled";
+  const [chatOpen, setChatOpen] = useState(false);
+  const [unread, setUnread] = useState(0);
+
+  // lightweight unread indicator using messages subscription
+  useEffect(() => {
+    if (!orderId) return;
+    let mounted = true;
+    db.collection(collectionNames.MESSAGES).subscribe(
+      `order="${orderId}"`,
+      () => {
+        if (!mounted) return;
+        // naive unread: count messages not from client and not read
+        // fetch minimal list to compute; avoid heavy loads
+        db.collection(collectionNames.MESSAGES)
+          .getFullList(50, {
+            sort: "-created",
+            filter: `order = "${orderId}"`,
+          })
+          .then((list: any[]) => {
+            const count = list.filter(
+              (m) => !m.read && m.sender !== "client",
+            ).length;
+            setUnread(count);
+          })
+          .catch(() => {});
+      },
+    );
+    return () => {
+      mounted = false;
+      try {
+        db.collection(collectionNames.MESSAGES).unsubscribe();
+      } catch (err) {
+        console.debug("unsubscribe error", err);
+      }
+    };
+  }, [orderId]);
 
   const currentIndex = useMemo(
     () => VISIBLE_STATUS_ORDER.indexOf(simulatedStatus as any),
@@ -388,8 +427,20 @@ export default function OrderTrackingPage(): JSX.Element {
                         ))}
                   </div>
                 </div>
-                {/* Messaging widget for clients to contact admin/owner */}
-                {order?.id && <MessageWidget orderId={order.id} />}
+                {/* Chat floating button + modal */}
+                {order?.id && (
+                  <>
+                    <ChatButton
+                      unreadCount={unread}
+                      onClick={() => setChatOpen(true)}
+                    />
+                    <ChatModal
+                      orderId={order.id}
+                      open={chatOpen}
+                      onClose={() => setChatOpen(false)}
+                    />
+                  </>
+                )}
               </>
             )}
           </CardContent>
